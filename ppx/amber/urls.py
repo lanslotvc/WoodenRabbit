@@ -16,11 +16,15 @@ Including another URLconf
 from django.urls import path
 from . import views
 
+app_name = 'amber'
 urlpatterns = [
-    path('',        views.index,   name='index'),
-    #path('members', views.members, name='members'),
-    #path('porder',  views.porder,  name='porder'),
-    #path('corder',  views.corder,  name='corder'),
+    path('',                     views.index,   name='index'),
+    path('members',              views.members, name='members'),
+    path('member/<int:m_id>/',   views.member,  name='member'),
+    path('porders',              views.porders, name='porders'),
+    path('porder/<int:p_id>/',   views.porder,  name='porder'),
+    path('corders',              views.corders, name='corders'),
+    path('corder/<int:c_id>/',   views.corder,  name='corder'),
 ]
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

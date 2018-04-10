@@ -4,8 +4,8 @@ from django.db import models
 
 # IMPORTANT!!!
 # run the followings upon changes to models:
-# python manage.py makemigrations dym
-# python manage.py sqlmigrate dym 0001   # (just show schemas)
+# python manage.py makemigrations amber
+# python manage.py sqlmigrate amber 0001   # (just show schemas)
 # python manage.py migrate
 
 class Member(models.Model):
@@ -23,7 +23,7 @@ class Member(models.Model):
   rank = models.IntegerField('VIP等级', default=0)
   status = models.IntegerField('客户状态', default=1)
   tag = models.TextField('备注', blank=True, null=True)
-  portrait = models.ImageField('照片', upload_to='dym/static/portraits', blank=True, null=True)
+  portrait = models.ImageField('照片', upload_to='amber/static/portraits', blank=True, null=True)
   
   rank_str_dic = {0: '普通会员', 1: '高级会员', 2: '至尊会员',
                   4315: '至尊学徒会员兼首席设计师'}

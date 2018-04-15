@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import format_html
 
 # Create your models here.
 
@@ -23,17 +24,28 @@ class Member(models.Model):
   rank = models.IntegerField('VIP等级', default=0)
   status = models.IntegerField('客户状态', default=1)
   tag = models.TextField('备注', blank=True, null=True)
-  portrait = models.ImageField('照片', upload_to='amber/static/portraits', blank=True, null=True)
+  portrait = models.ImageField('照片', upload_to='upload', blank=True, null=True)
   
-  rank_str_dic = {0: '普通会员', 1: '高级会员', 2: '至尊会员',
-                  4315: '至尊学徒会员兼首席设计师'}
+  rank_str_dic = {0: '普通会员', 1: '高级会员', 2: '至尊会员'}
   def rank_str(self):
     return Member.rank_str_dic[self.rank]
+  rank_str.short_description = 'VIP等级'
     
   status_str_dic = {0: '已退', 1: '活跃'}
   def status_str(self):
     return Member.status_str_dic[self.status]
+  status_str.short_description = '客户状态'
+
+  def decro_gender(self):
+    return format_html('<span style="color: #BB00BB;">{0}</span>',
+                       '帅哥' if self.gender == 'M' else '美女')
+  decro_gender.allow_tags = True
+  decro_gender.short_description = '性别'
   
+  def decro_protrait(self):
+    return format_html('<img src="/amber{0}" alt="" height=120 width=90 />', self.portrait.url)
+  decro_protrait.allow_tags = True
+  decro_protrait.short_description = '靓照'
 
   def __str__(self):
     return self.name + '  [ ' + self.rank_str() + ', ' + self.status_str() + ' ]'

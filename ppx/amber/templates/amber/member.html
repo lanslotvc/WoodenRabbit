@@ -9,5 +9,10 @@
     <li>{{ member.birthday }}</li>
     <li>{{ member.rank_str }}</li>
     <li>{{ member.status_str }}</li>
-    <li>{{ member.portrait }}</li>
+	{% if member.portrait %}
+    <li>{{ member.portrait.url }}</li>
+    <li><img src="../..{{ member.portrait.url }}" alt="" height=120 width=90 /></li>
+	{% endif %}
 </ul>
+
+<a href="/admin/amber/member/{{ member.id }}/change/">修改</a>

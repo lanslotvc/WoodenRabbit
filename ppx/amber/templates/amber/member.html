@@ -4,11 +4,11 @@
     <li>{{ member.email }}</li>
     <li>{{ member.mobile }}</li>
     <li>{{ member.address }}</li>
-    <li>{{ member.gender }}</li>
+    <li>{{ member.get_gender_display }}</li>
     <li>{{ member.join_date }}</li>
     <li>{{ member.birthday }}</li>
-    <li>{{ member.rank_str }}</li>
-    <li>{{ member.status_str }}</li>
+    <li>{{ member.get_rank_display }}</li>
+    <li>{{ member.get_status_display }}</li>
 	{% if member.portrait %}
     <li>{{ member.portrait.url }}</li>
     <li><img src="../..{{ member.portrait.url }}" alt="" height=120 width=90 /></li>

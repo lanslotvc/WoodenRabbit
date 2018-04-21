@@ -1,15 +1,21 @@
-﻿<div>
-  <h3><a href="{% url 'amber:member_list' %}" >客户管理</a></h3>
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<div>
+  <h2><a href="{% url 'amber:member_list' %}" >客户管理</a></h2>
 </div>
 
 <div>
-  <h3><a href="{% url 'amber:porders' %}" >销售订单</a></h3>
+  <h2><a href="{% url 'amber:porders' %}" >销售订单</a></h2>
 </div>
 
 <div>
-  <h3><a href="{% url 'amber:corders' %}" >制作订单</a></h3>
+  <h2><a href="{% url 'amber:corders' %}" >制作订单</a></h2>
 </div>
+{% endblock %}
 
+{% block sidebar %}
 <div>
-  <h5><a href="{% url 'amber:contact' %}" >留言</a></h5>
+      <h4><a href="{% url 'amber:contact' %}" >留言</a></h4>
 </div>
+{% endblock %}

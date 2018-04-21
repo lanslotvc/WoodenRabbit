@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'amber/style.css' %}" />
+    <title>{% block title %}木兔子{% endblock title %}</title>
+</head>
+
+<body class="app-amber model-member change-list">
+    <!-- Header -->
+    <div id="header">
+      <div id="branding">
+        <h1 id="site-name"><a href="{% url 'amber:index' %}">木兔子 管理</a></h1>
+      </div>
+      <div id="user-tools">
+        {% if user.is_authenticated %}
+          <span>欢迎，<strong>{{ user }}</strong></span>
+          <a href="{% url 'amber:password_change' %}">修改密码</a> / <a href="{% url 'amber:logout' %}">注销</a>
+        {% else %}
+          <a href="{% url 'amber:login' %}">登录</a>
+        {% endif %}
+      </div>
+    </div>
+    <!-- END Header -->
+    
+    <div id="sidebar">
+        {% block sidebar %}
+        {% endblock sidebar %}
+    </div>
+
+    <div id="content">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+</html>

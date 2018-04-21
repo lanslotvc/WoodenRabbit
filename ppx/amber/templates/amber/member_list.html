@@ -1,10 +1,46 @@
-﻿<h3>客户 - {{ now }}</h3>
-<ul>
-{% for member in object_list %}
-    <li><a href="{% url 'amber:member' member.id %}">{{ member }}</a></li>
-{% empty %}
-    <li>还有谁？</li>
-{% endfor %}
-</ul>
+﻿{% extends "amber/base.html" %}
 
-<a href="{% url 'amber:member_create' %}">添加客户</a>
+{% block content %}
+<h3>会员 = {{ now }}</h3>
+
+<div class="xfull">
+  <ul class="toplinks">
+    <li>入会日期</li>
+  {% for year in ylist %}
+    <li><a href="?join_date__year={{ year }}">{{ year }}</a></li>
+  {% endfor %}
+    <li><a href="?">全部</a></li>
+  </ul><br class="clear" />
+</div>
+
+
+<div class="results">
+<table>
+    <tr>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">姓名</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">消费</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">销售订单</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">制作订单</a></div><div class="clear"></div></th>
+    </tr>
+{% for member in object_list %}
+    <tr>
+      <td><a href="{% url 'amber:member' member.id %}">{{ member }}</a></td>
+      <td>{{ member.accumulates }}</td>
+      <td>{{ member.n_purchase_orders }}</td>
+      <td>{{ member.n_craft_orders }}</td>
+    </tr>
+{% empty %}
+    <tr><td colspan=4>还有谁？</td></tr>
+{% endfor %}
+</table>
+</div>
+
+
+{% if user.is_authenticated %}
+  <span><a href="{% url 'amber:member_create' %}">添加会员</a></span>
+{%endif%}
+{% endblock %}
+
+
+
+

@@ -1,4 +1,7 @@
-﻿<h5>{{ member }} - {{ now }}</h5>
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<h5>{{ member }} - {{ now }}</h5>
 <ul>
     <li>{{ member.name }}</li>
     <li>{{ member.email }}</li>
@@ -14,4 +17,7 @@
 	{% endif %}
 </ul>
 
-<a href="/admin/amber/member/{{ member.id }}/change/">修改</a>
+{% if user.is_authenticated %}
+  <a href="{% url 'amber:member_update' member.id %}">修改</a>
+{% endif %}
+{% endblock %}

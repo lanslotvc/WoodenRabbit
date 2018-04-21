@@ -1,7 +1,7 @@
 ﻿{% extends "amber/base.html" %}
 
 {% block content %}
-<h5>添加会员</h5>
+<h5>更新会员信息 -- {{ object }}</h5>
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save" />

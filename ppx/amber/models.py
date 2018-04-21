@@ -16,8 +16,8 @@ class Member(models.Model):
   status_choice = ((0, '已退'), (1, '活跃'))
   gender_choice = (('F', '美女'), ('M', '帅哥'))
   
-  name = models.CharField('客户姓名', max_length=32)
-  email = models.EmailField('客户邮箱')
+  name = models.CharField('姓名', max_length=32)
+  email = models.EmailField('邮箱')
   mobile = models.IntegerField('手机', default=0)
   phone = models.IntegerField('座机', default=0)
   address = models.TextField('地址')
@@ -28,7 +28,7 @@ class Member(models.Model):
   n_purchase_orders = models.IntegerField('累积销售订单', default=0)
   n_craft_orders = models.IntegerField('累积制作订单', default=0)
   rank = models.IntegerField('VIP等级', default=0, choices=rank_choice)
-  status = models.IntegerField('客户状态', default=1, choices=status_choice)
+  status = models.IntegerField('会员状态', default=1, choices=status_choice)
   tag = models.TextField('备注', blank=True, null=True)
   portrait = models.ImageField('照片', upload_to='upload', blank=True, null=True)
   
@@ -44,11 +44,6 @@ class Member(models.Model):
     return format_html('<img src="/amber{0}" alt="" height=120 width=90 />', self.portrait.url)
   decro_protrait.allow_tags = True
   decro_protrait.short_description = '靓照'
-
-  def backlink(self):
-    return format_html('<a href="/amber/member/{0}/">返回</a>', self.id)
-  backlink.allow_tags = True
-  backlink.short_description = '回到列表'
 
   def __str__(self):
     return self.name + '  [ ' + self.get_gender_display() + ', ' + self.get_rank_display() + ', ' + self.get_status_display() + ' ]'

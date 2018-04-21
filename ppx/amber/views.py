@@ -1,15 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
+from django.views.generic import ListView
 
 from .models import *
+
+class MemberListView(ListView):
+  model = Member
+  template_name = 'amber/member_list.html'
+
+  def get(self, request, *args, **kwargs):
+    members = Member.objects.all()
+    return render(request, self.template_name, {'members': members})
+
 # Create your views here.
 def index(request):
   return render(request, 'amber/index.html', None)
-      
-def members(request):
-  members = Member.objects.all()
-  return render(request, 'amber/members.html', {'members': members})
 
 def member(request, m_id):
   member = get_object_or_404(Member, pk=m_id)

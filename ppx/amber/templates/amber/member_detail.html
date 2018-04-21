@@ -1,4 +1,4 @@
-﻿<h5>{{ member }}</h5>
+﻿<h5>{{ member }} - {{ now }}</h5>
 <ul>
     <li>{{ member.name }}</li>
     <li>{{ member.email }}</li>
@@ -10,7 +10,6 @@
     <li>{{ member.get_rank_display }}</li>
     <li>{{ member.get_status_display }}</li>
 	{% if member.portrait %}
-    <li>{{ member.portrait.url }}</li>
     <li><img src="../..{{ member.portrait.url }}" alt="" height=120 width=90 /></li>
 	{% endif %}
 </ul>

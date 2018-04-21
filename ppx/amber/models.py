@@ -1,5 +1,7 @@
+from django.utils import timezone
 from django.db import models
 from django.utils.html import format_html
+from django.urls import reverse
 
 # Create your models here.
 
@@ -14,13 +16,13 @@ class Member(models.Model):
   status_choice = ((0, '已退'), (1, '活跃'))
   gender_choice = (('F', '美女'), ('M', '帅哥'))
   
-  name = models.TextField('客户姓名')
+  name = models.CharField('客户姓名', max_length=32)
   email = models.EmailField('客户邮箱')
   mobile = models.IntegerField('手机', default=0)
   phone = models.IntegerField('座机', default=0)
   address = models.TextField('地址')
   gender = models.CharField('性别', max_length=1, choices=gender_choice)
-  join_date = models.DateTimeField('加入会员日期')
+  join_date = models.DateTimeField('加入会员日期', default=timezone.now)
   birthday = models.DateTimeField('生日')
   accumulates = models.IntegerField('累积消费', default=0)
   n_purchase_orders = models.IntegerField('累积销售订单', default=0)
@@ -37,6 +39,8 @@ class Member(models.Model):
   decro_gender.short_description = '性别'
   
   def decro_protrait(self):
+    if (not self.portrait):
+      return format_html('<p>不给看～～</p>')
     return format_html('<img src="/amber{0}" alt="" height=120 width=90 />', self.portrait.url)
   decro_protrait.allow_tags = True
   decro_protrait.short_description = '靓照'
@@ -49,6 +53,11 @@ class Member(models.Model):
   def __str__(self):
     return self.name + '  [ ' + self.get_gender_display() + ', ' + self.get_rank_display() + ', ' + self.get_status_display() + ' ]'
     
+  def get_absolute_url(self):
+    return reverse('amber:member', kwargs={'pk': self.pk})
+
+
+
 class Material(models.Model):
   name = models.TextField('命名')
   kind = models.TextField('种类')

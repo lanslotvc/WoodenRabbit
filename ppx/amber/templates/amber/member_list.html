@@ -1,9 +1,10 @@
-﻿{% if members %}
-    <ul>
-    {% for member in members %}
-        <li><a href="{% url 'amber:member' member.id %}">{{ member }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No members are available.</p>
-{% endif %}
+﻿<h3>客户 - {{ now }}</h3>
+<ul>
+{% for member in object_list %}
+    <li><a href="{% url 'amber:member' member.id %}">{{ member }}</a></li>
+{% empty %}
+    <li>还有谁？</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'amber:member_create' %}">添加客户</a>

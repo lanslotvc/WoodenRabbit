@@ -18,17 +18,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
-from .views import MemberListView
+from .views import ContactView, MemberListView, MemberDetailView, MemberCreateView
 
 app_name = 'amber'
 urlpatterns = [
-    path('',                     views.index,              name='index'),
-    path('members/',             MemberListView.as_view(), name='members'),
-    path('member/<int:m_id>/',   views.member,             name='member'),
-    path('porders/',             views.porders,            name='porders'),
-    path('porder/<int:p_id>/',   views.porder,             name='porder'),
-    path('corders/',             views.corders,            name='corders'),
-    path('corder/<int:c_id>/',   views.corder,             name='corder'),
+    path('',                     views.index,                name='index'),
+    path('contact/',             ContactView.as_view(),      name='contact'),
+    path('member_list/',         MemberListView.as_view(),   name='member_list'),
+    path('member/<pk>/',         MemberDetailView.as_view(), name='member'),
+    path('member_create',        MemberCreateView.as_view(), name='member_create'),
+    path('porders/',             views.porders,              name='porders'),
+    path('porder/<int:p_id>/',   views.porder,               name='porder'),
+    path('corders/',             views.corders,              name='corders'),
+    path('corder/<int:c_id>/',   views.corder,               name='corder'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

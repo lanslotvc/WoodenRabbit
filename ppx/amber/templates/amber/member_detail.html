@@ -17,7 +17,7 @@
 	{% endif %}
 </ul>
 
-{% if user.is_authenticated %}
+{% if can_edit_member %}
   <a href="{% url 'amber:member_update' member.id %}">修改</a>
 {% endif %}
 {% endblock %}

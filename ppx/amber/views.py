@@ -6,6 +6,8 @@ from django.template import loader
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .forms import ContactForm
@@ -13,12 +15,11 @@ from .forms import ContactForm
 import sys
 
 # Member ================================================================================
-class MemberListView(ListView):
+class MemberListView(LoginRequiredMixin, ListView):
   model = Member
 
   def get_context_data(self, **kwargs):
     context = super(MemberListView, self).get_context_data(**kwargs)
-    context['now'] = timezone.now() #self.request.user#
     context['ylist'] = list(set([ x.join_date.year for x in context['member_list']]))
     ol = context['object_list']
     join_date__year = self.request.GET.get('join_date__year')
@@ -42,27 +43,33 @@ class MemberListView(ListView):
         ol.reverse()
       context['order_by'] = order_by
     context['object_list'] = ol
+    context['can_edit_member'] = self.request.user.has_perm('amber.edit_member')
+    context['now'] = timezone.now()
+    context['dummy'] = 'testing'
     return context
 
-class MemberDetailView(DetailView):
+class MemberDetailView(LoginRequiredMixin, DetailView):
   model = Member
   def get_context_data(self, **kwargs):
     context = super(MemberDetailView, self).get_context_data(**kwargs)
+    context['can_edit_member'] = self.request.user.has_perm('amber.edit_member')
     context['now'] = timezone.now()
     return context
 
-class MemberCreateView(CreateView):
+class MemberCreateView(PermissionRequiredMixin, CreateView):
   model = Member
   template_name_suffix = '_create_form'
   fields = ['name', 'email', 'mobile', 'phone', 'address', 'gender', 'birthday', 'rank', 'tag', 'portrait']
+  permission_required = 'amber.edit_member'
 
-class MemberUpdateView(UpdateView):
+class MemberUpdateView(PermissionRequiredMixin, UpdateView):
   model = Member
   template_name_suffix = '_update_form'
   fields = ['email', 'mobile', 'phone', 'address', 'rank', 'tag', 'portrait', 'accumulates', 'n_purchase_orders', 'n_craft_orders', 'status']
+  permission_required = 'amber.edit_member'
 
 # Contact ================================================================================
-class ContactView(FormView):
+class ContactView(LoginRequiredMixin, FormView):
   template_name = 'amber/contact.html'
   form_class = ContactForm
   success_url = '/amber/'
@@ -73,18 +80,13 @@ class ContactView(FormView):
 
 
 # Create your views here.
+@login_required()
 def index(request):
-  return render(request, 'amber/index.html', None)
+  context = {}
+  context['now'] = timezone.now()
+  context['is_group_finance']  = str(request.user.groups.all()[0]).lower() == 'finance'
+  context['is_group_designer'] = str(request.user.groups.all()[0]).lower() == 'designer'
+  context['is_group_sales']    = str(request.user.groups.all()[0]).lower() == 'sales'
+  context['dummy'] = 'testing'
+  return render(request, 'amber/index.html', context)
 
-
-def porders(request):
-  return HttpResponse('porders')
-
-def porder(request):
-  return HttpResponse('porder')
-
-def corders(request):
-  return HttpResponse('corders')
-
-def corder(request):
-  return HttpResponse('corder')

@@ -5,17 +5,22 @@
   <h2><a href="{% url 'amber:member_list' %}" >客户管理</a></h2>
 </div>
 
+{% if is_group_finance %}
 <div>
-  <h2><a href="{% url 'amber:porders' %}" >销售订单</a></h2>
+  <h2><a href="" >入库管理</a></h2>
 </div>
+{%endif%}
 
+{% if is_group_sales or is_group_designer %}
 <div>
-  <h2><a href="{% url 'amber:corders' %}" >制作订单</a></h2>
+  <h2><a href="" >订单管理</a></h2>
 </div>
+{%endif%}
 {% endblock %}
 
 {% block sidebar %}
 <div>
       <h4><a href="{% url 'amber:contact' %}" >留言</a></h4>
+      <h4>{{ dummy }} - {{ now }}</h4>
 </div>
 {% endblock %}

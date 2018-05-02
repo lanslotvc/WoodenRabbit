@@ -1,7 +1,7 @@
 ﻿{% extends "amber/base.html" %}
 
 {% block content %}
-<h3>会员 = {{ now }}</h3>
+<h3>会员 = {{ now }} -- {{ dummy }}</h3>
 
 <div class="xfull">
   <ul class="toplinks">
@@ -36,7 +36,7 @@
 </div>
 
 
-{% if user.is_authenticated %}
+{% if can_edit_member %}
   <span><a href="{% url 'amber:member_create' %}">添加会员</a></span>
 {%endif%}
 {% endblock %}

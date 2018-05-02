@@ -30,11 +30,6 @@ urlpatterns = [
     path('member_create',        MemberCreateView.as_view(), name='member_create'),
     path('member_update/<pk>',   MemberUpdateView.as_view(), name='member_update'),
     
-    path('porders/',             views.porders,              name='porders'),
-    path('porder/<int:p_id>/',   views.porder,               name='porder'),
-    path('corders/',             views.corders,              name='corders'),
-    path('corder/<int:c_id>/',   views.corder,               name='corder'),
-    
     path('login/',               auth_views.LoginView.as_view(),          name='login'),
     path('logout/',              auth_views.LogoutView.as_view(),         name='logout'),
     path('password_change/',     auth_views.PasswordChangeView.as_view(success_url='/amber/'), name='password_change'),

@@ -12,6 +12,10 @@ from django.urls import reverse
 # python manage.py migrate
 
 class Member(models.Model):
+  class Meta:
+    permissions = (
+                    ("edit_member", "Can add/change/delete members"),
+                  )
   rank_choice = ((0, '普通会员'), (1, '高级会员'), (2, '至尊会员'))
   status_choice = ((0, '已退'), (1, '活跃'))
   gender_choice = (('F', '美女'), ('M', '帅哥'))

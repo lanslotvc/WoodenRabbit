@@ -18,6 +18,8 @@
 </ul>
 
 {% if can_edit_member %}
+<div class="modify">
   <a href="{% url 'amber:member_update' member.id %}">修改</a>
+</div>
 {% endif %}
 {% endblock %}

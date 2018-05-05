@@ -35,6 +35,12 @@ class Member(models.Model):
   status = models.IntegerField('会员状态', default=1, choices=status_choice)
   tag = models.TextField('备注', blank=True, null=True)
   portrait = models.ImageField('照片', upload_to='upload', blank=True, null=True)
+  # 微信号，来源（会员介绍，店面客人，网络推广，展会，其他），昵称
+  # 生日提醒
+  # 等级自动计算
+  # 介绍人 optional
+  # 发展下线 accumulate
+  # 第一单优惠 accumulates == 0
   
   def decro_gender(self):
     return format_html('<span style="color: #BB00BB;">{0}</span>',
@@ -55,9 +61,46 @@ class Member(models.Model):
   def get_absolute_url(self):
     return reverse('amber:member', kwargs={'pk': self.pk})
 
+class InBound(models.Model):
+  class Meta:
+    permissions = (
+                    ("canin", "WR: Can add/change/delete inbound sheet"),
+                    ("viewbase", "WR: Can access base price"),
+                  )
+  type_choice = ((0, '成品'), (1, '原材料'), (2, '配件'), (3, '客带'))
+  
+  name = models.CharField('名称', max_length=64)
+  kind = models.CharField('种类', max_length=64)
+  type = models.IntegerField('库存类型', default=1, choices=type_choice)
+  
+  quantity = models.IntegerField('数量', default=0)
+  unit = models.CharField('数量单位', max_length=16)
+  weight = models.IntegerField('重量', default=0)
+  unit = models.CharField('重量单位', max_length=16)
+  baseprice = models.IntegerField('成本', default=0)
+  saleprice = models.IntegerField('售价', default=0)
+  date = models.DateTimeField('入库日期', default=timezone.now)
 
+  tag = models.TextField('备注', blank=True, null=True)
 
-class Material(models.Model):
+  def __str__(self):
+    return '入库单_' + str(self.id)
+  def get_absolute_url(self):
+    return reverse('amber:store_list')
+
+class Store(models.Model):
+  inb = models.ForeignKey(InBound, models.SET_NULL, blank=True, null=True)
+  remains = models.IntegerField('剩余', default=0)
+
+  tag = models.TextField('备注', blank=True, null=True)
+  
+  def __str__(self):
+    return '库存_' + str(self.inb.id)
+
+class OutBound(models.Model):
+  pass
+
+class Material(models.Model): #材料   单位（克，克拉，个。。。）
   name = models.TextField('命名')
   kind = models.TextField('种类')
   type = models.IntegerField('（原材料/配件/成品/客带）', default=0)
@@ -65,6 +108,9 @@ class Material(models.Model):
   type_str_dic = {0: '原材料', 1: '配件', 2: '成品', 3: '客带'}
   def type_str(self):
     return Material.type_str_dic[self.type]
+  # 折扣，只针对成品类
+  # 一口价
+  # 特价品
   
     
 class TestOrder(models.Model):

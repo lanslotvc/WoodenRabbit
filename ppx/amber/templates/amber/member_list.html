@@ -37,7 +37,9 @@
 
 
 {% if can_edit_member %}
+<div class="modify">
   <span><a href="{% url 'amber:member_create' %}">添加会员</a></span>
+</div>
 {%endif%}
 {% endblock %}
 

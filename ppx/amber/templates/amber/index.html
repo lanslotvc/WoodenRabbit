@@ -2,16 +2,16 @@
 
 {% block content %}
 <div>
-  <h2><a href="{% url 'amber:member_list' %}" >客户管理</a></h2>
+  <h2><a href="{% url 'amber:member_list' %}" >会员管理</a></h2>
 </div>
 
-{% if is_group_finance %}
+{% if is_group_finance or is_group_sales or user.is_superuser %}
 <div>
-  <h2><a href="" >入库管理</a></h2>
+  <h2><a href="{% url 'amber:store_list' %}" >库存查看</a></h2>
 </div>
 {%endif%}
 
-{% if is_group_sales or is_group_designer %}
+{% if is_group_sales or is_group_designer or user.is_superuser %}
 <div>
   <h2><a href="" >订单管理</a></h2>
 </div>

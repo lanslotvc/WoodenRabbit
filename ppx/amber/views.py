@@ -48,7 +48,6 @@ class MemberListView(LoginRequiredMixin, ListView):
       context['get_str'] += ('&join_date__year=' + join_date__year)
       context['y'] = int(join_date__year)
     if (gender):
-      context['dummy'] = [ x.gender for x in ol ]
       ol = [ x for x in ol if x.gender == int(gender) ]
       context['get_str'] += ('&gender=' + gender)
       context['g'] = int(gender)
@@ -139,11 +138,36 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['ylist'] = list(set([ x.inb.date.year for x in context['object_list']]))
     ol = context['object_list']
     date__year = self.request.GET.get('date__year')
+    date__year = None if date__year == 'C' else date__year
+    kind = self.request.GET.get('kind')
+    kind = None if kind == 'C' else kind
+    type = self.request.GET.get('type')
+    type = None if type == 'C' else type
     order_by = self.request.GET.get('o')
+    q = self.request.GET.get('q')
     context['get_str'] = ''
+    # query
+    if (q):
+      l = []
+      for i in ol:
+        if (q in i.inb.name) or (q in i.inb.desc) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
+          l.append(i)
+      ol = l
+      context['q'] = 1
+    # filter
     if (date__year):
       ol = [ x for x in ol if x.inb.date.year == int(date__year) ]
       context['get_str'] += ('&date__year=' + date__year)
+      context['y'] = int(date__year)
+    if (kind):
+      ol = [ x for x in ol if x.inb.kind == int(kind) ]
+      context['get_str'] += ('&kind=' + kind)
+      context['k'] = int(kind)
+    if (type):
+      ol = [ x for x in ol if x.inb.type == int(type) ]
+      context['get_str'] += ('&type=' + type)
+      context['t'] = int(type)
+    # order
     if (order_by):
       order_by = int(order_by)
       order = abs(order_by)
@@ -158,7 +182,7 @@ class StoreListView(LoginRequiredMixin, ListView):
       elif (order == 5):
         ol = sorted(ol, key=lambda i: i.remains)
       elif (order == 6):
-        ol = sorted(ol, key=lambda i: i.inb.unit)
+        pass
       elif (order == 7):
         ol = sorted(ol, key=lambda i: i.inb.baseprice)
       elif (order == 8):
@@ -178,7 +202,7 @@ class StoreListView(LoginRequiredMixin, ListView):
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
   template_name_suffix = '_create_form'
-  fields = ['name', 'kind', 'type', 'quantity', 'unit', 'baseprice', 'saleprice', 'tag']
+  fields = ['name', 'kind', 'type', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tag']
   permission_required = 'amber.canin'
 
   def form_valid(self, form):

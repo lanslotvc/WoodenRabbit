@@ -90,16 +90,27 @@ class InBound(models.Model):
                     ("canin", "WR: Can add/change/delete inbound sheet"),
                     ("viewbase", "WR: Can access base price"),
                   )
+  '''
+  kind_choice = ((, '白玉'), (, '翡翠'), (, '珍珠'), (, '钻石'), (, '红宝石'), (, '蓝宝石'), (, '祖母绿'), 
+                 (, '尖晶石'), (, '琥珀'), (, '蜜蜡'), (, '欧珀'), (, '绿松石'), (, '舒俱来'), (, '海蓝宝'),
+                 (, '月光石'), (, '拉长石'), (, '碧玺'), (, '玛瑙'), (, '珊瑚'), (, '碧玉'), (, '点翠'),
+                 (, '青晶石'), (, '水晶'), (, '砗磲'), (, '芬达石'), (, '石榴石'), (, '海纹石'), (, '琉璃'),
+                 (, '天珠'), (, '菩提子'), (, '沉香'), (, '红木'),
+                 (, '黄金'), (, '铂金'), (, '白银'),
+                 (9999, '其他'))
+  '''
+  kind_choice = ((0, '有机宝石'), (1, '无机宝石'), (2, '贵重金属'), (3, '贵重宝石'), (999, '其他'))
   type_choice = ((0, '成品'), (1, '原材料'), (2, '配件'), (3, '客带'))
   
   name = models.CharField('名称', max_length=64)
-  kind = models.CharField('种类', max_length=64)
+  desc = models.CharField('细别', max_length=128)
+  kind = models.IntegerField('类别', default=999, choices=kind_choice)
   type = models.IntegerField('库存类型', default=1, choices=type_choice)
   
   quantity = models.IntegerField('数量', default=0)
-  unit = models.CharField('数量单位', max_length=16)
+  qunit = models.CharField('数量单位', max_length=16, blank=True, null=True)
   weight = models.IntegerField('重量', default=0)
-  unit = models.CharField('重量单位', max_length=16)
+  wunit = models.CharField('重量单位', max_length=16, blank=True, null=True)
   baseprice = models.IntegerField('成本', default=0)
   saleprice = models.IntegerField('售价', default=0)
   date = models.DateTimeField('入库日期', default=timezone.now)
@@ -122,6 +133,10 @@ class Store(models.Model):
   def __str__(self):
     return '库存_' + str(self.inb.id)
 
+class StoreImage(models.Model):
+  store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
+  image = models.ImageField('照片', upload_to='upload/store', blank=True, null=True)
+  
 class OutBound(models.Model):
   pass
 

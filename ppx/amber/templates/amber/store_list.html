@@ -3,26 +3,57 @@
 {% block content %}
 <h3>库存 = {{ now }} -- {{ dummy }}</h3>
 
+<div id="toolbar">
+  <form id="changelist-search" method="get">
+    <div><!-- DIV needed for valid HTML -->
+      <label for="searchbar"><img src="/static/admin/img/search.svg" alt="Search" /></label>
+      <input type="text" size="40" name="q" value="" id="searchbar" autofocus />
+      <input type="submit" value="搜索" />
+      {% if q %}<a href="?">全部</a>{% endif %}
+    </div>
+  </form>
+</div>
+
 <div class="xfull">
   <ul class="toplinks">
     <li>入库日期</li>
   {% for year in ylist %}
-    <li><a href="?date__year={{ year }}">{{ year }}</a></li>
+    <li><a href="?date__year={{ year }}">{% if y == year %} > {% endif %} {{ year }} {% if y == year %} < {% endif %}</a></li>
   {% endfor %}
-    <li><a href="?">全部</a></li>
+    <li><a href="?date__year=C">全部</a></li>
   </ul><br class="clear" />
 </div>
-
+<div class="xfull">
+  <ul class="toplinks">
+    <li>类别</li>
+    <li><a href="?{{ get_str }}&kind=0">{% if k == 0 %} > {% endif %} 有机宝石 {% if k == 0 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=1">{% if k == 1 %} > {% endif %} 无机宝石 {% if k == 1 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=2">{% if k == 2 %} > {% endif %} 贵重金属 {% if k == 2 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=3">{% if k == 3 %} > {% endif %} 贵重宝石 {% if k == 3 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=999">{% if k == 999 %} > {% endif %} 其他 {% if k == 999 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>库存类型</li>
+    <li><a href="?{{ get_str }}&type=0">{% if t == 0 %} > {% endif %} 成品 {% if t == 0 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=1">{% if t == 1 %} > {% endif %} 原材料 {% if t == 1 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=2">{% if t == 2 %} > {% endif %} 配件 {% if t == 2 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=3">{% if t == 3 %} > {% endif %} 客带 {% if t == 3 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
 
 <div class="results">
 <table>
     <tr>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">序号</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">名称</a></div><div class="clear"></div></th>
-      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">种类</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">类别</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">库存类型</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 5 %}-5{% else %}5{% endif %}">剩余</a></div><div class="clear"></div></th>
-      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 6 %}-6{% else %}6{% endif %}">单位</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">单位</div><div class="clear"></div></th>
       {% if can_viewbase %}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 7 %}-7{% else %}7{% endif %}">成本</a></div><div class="clear"></div></th>
       {%endif%}
@@ -33,10 +64,10 @@
     <tr>
       <td><a href="">{{ item }}</a></td>
       <td>{{ item.inb.name  }}</td>
-      <td>{{ item.inb.kind }}</td>
-      <td>{{ item.inb.type }}</td>
+      <td>{{ item.inb.get_kind_display }}</td>
+      <td>{{ item.inb.get_type_display }}</td>
       <td>{{ item.remains }}</td>
-      <td>{{ item.inb.unit }}</td>
+      <td>{{ item.inb.qunit }}</td>
       {% if can_viewbase %}
       <td>{{ item.inb.baseprice }}</td>
       {%endif%}

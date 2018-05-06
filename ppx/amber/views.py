@@ -23,11 +23,33 @@ class MemberListView(LoginRequiredMixin, ListView):
     context['ylist'] = list(set([ x.join_date.year for x in context['member_list']]))
     ol = context['object_list']
     join_date__year = self.request.GET.get('join_date__year')
+    join_date__year = None if join_date__year == 'C' else join_date__year
+    gender = self.request.GET.get('gender')
+    gender = None if gender == 'C' else gender
+    rank = self.request.GET.get('rank')
+    rank = None if rank == 'C' else rank
+    status = self.request.GET.get('status')
+    status = None if status == 'C' else status
     order_by = self.request.GET.get('o')
     context['get_str'] = ''
     if (join_date__year):
       ol = [ x for x in ol if x.join_date.year == int(join_date__year) ]
       context['get_str'] += ('&join_date__year=' + join_date__year)
+      context['y'] = int(join_date__year)
+    if (gender):
+      context['dummy'] = [ x.gender for x in ol ]
+      ol = [ x for x in ol if x.gender == int(gender) ]
+      context['get_str'] += ('&gender=' + gender)
+      context['g'] = int(gender)
+    if (rank):
+      ol = [ x for x in ol if x.rank == int(rank) ]
+      context['get_str'] += ('&rank=' + rank)
+      context['r'] = int(rank)
+    if (status):
+      ol = [ x for x in ol if x.status == int(status) ]
+      context['get_str'] += ('&status=' + status)
+      context['s'] = int(status)
+
     if (order_by):
       order_by = int(order_by)
       order = abs(order_by)
@@ -39,13 +61,15 @@ class MemberListView(LoginRequiredMixin, ListView):
         ol = sorted(ol, key=lambda m: m.n_purchase_orders)
       elif (order == 4):
         ol = sorted(ol, key=lambda m: m.n_craft_orders)
+      elif (order == 5):
+        ol = sorted(ol, key=lambda m: m._next_birth())
       if (order_by < 0):
         ol.reverse()
       context['order_by'] = order_by
     context['object_list'] = ol
     context['can_edit_member'] = self.request.user.has_perm('amber.edit_member')
     context['now'] = timezone.now()
-    context['dummy'] = 'testing'
+    #context['dummy'] = join_date__year#'testing'
     return context
 
 class MemberDetailView(LoginRequiredMixin, DetailView):

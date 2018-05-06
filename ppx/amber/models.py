@@ -1,3 +1,4 @@
+import datetime
 from django.utils import timezone
 from django.db import models
 from django.utils.html import format_html
@@ -18,14 +19,17 @@ class Member(models.Model):
                   )
   rank_choice = ((0, '普通会员'), (1, '高级会员'), (2, '至尊会员'))
   status_choice = ((0, '已退'), (1, '活跃'))
-  gender_choice = (('F', '美女'), ('M', '帅哥'))
+  gender_choice = ((0, '美女'), (1, '帅哥'))
+  source_choice = ((0, '其他'), (1, '会员介绍'), (2, '店面客人'), (3, '网络推广'), (4, '展会'))
   
   name = models.CharField('姓名', max_length=32)
+  wechat = models.CharField('微信号', max_length=64)
+  source = models.IntegerField('来源', default=0, choices=source_choice)
   email = models.EmailField('邮箱')
   mobile = models.IntegerField('手机', default=0)
   phone = models.IntegerField('座机', default=0)
   address = models.TextField('地址')
-  gender = models.CharField('性别', max_length=1, choices=gender_choice)
+  gender = models.IntegerField('性别', default=0, choices=gender_choice)
   join_date = models.DateTimeField('加入会员日期', default=timezone.now)
   birthday = models.DateTimeField('生日')
   accumulates = models.IntegerField('累积消费', default=0)
@@ -35,18 +39,27 @@ class Member(models.Model):
   status = models.IntegerField('会员状态', default=1, choices=status_choice)
   tag = models.TextField('备注', blank=True, null=True)
   portrait = models.ImageField('照片', upload_to='upload', blank=True, null=True)
-  # 微信号，来源（会员介绍，店面客人，网络推广，展会，其他），昵称
   # 生日提醒
   # 等级自动计算
   # 介绍人 optional
   # 发展下线 accumulate
   # 第一单优惠 accumulates == 0
   
-  def decro_gender(self):
-    return format_html('<span style="color: #BB00BB;">{0}</span>',
-                       '帅哥' if self.gender == 'M' else '美女')
-  decro_gender.allow_tags = True
-  decro_gender.short_description = '性别'
+  def _next_birth(self):
+    today = timezone.now().replace(tzinfo=None)
+    next = datetime.datetime(today.year, self.birthday.month, self.birthday.day, 0, 0)
+    today = datetime.datetime(today.year, today.month, today.day, 0, 0)
+    if (today > next):
+      next = datetime.datetime(today.year + 1, self.birthday.month, self.birthday.day, 0, 0)
+    return (next - today).days
+
+  def next_birthday(self):
+    d = self._next_birth()
+    c = 'BB0000' if d < 60 else '000000'
+    a = ' <!!>' if d < 60 else ''
+    return format_html('<span style="color: #{};">{}{}</span>', c, d, a)
+  next_birthday.allow_tags = True
+  next_birthday.short_description = '下个生日'
   
   def decro_portrait(self):
     if (not self.portrait):
@@ -91,6 +104,8 @@ class InBound(models.Model):
 class Store(models.Model):
   inb = models.ForeignKey(InBound, models.SET_NULL, blank=True, null=True)
   remains = models.IntegerField('剩余', default=0)
+  discount = models.IntegerField('折扣', default=0)
+  bestsale = models.IntegerField('特价', default=0)
 
   tag = models.TextField('备注', blank=True, null=True)
   
@@ -100,24 +115,6 @@ class Store(models.Model):
 class OutBound(models.Model):
   pass
 
-class Material(models.Model): #材料   单位（克，克拉，个。。。）
-  name = models.TextField('命名')
-  kind = models.TextField('种类')
-  type = models.IntegerField('（原材料/配件/成品/客带）', default=0)
-
-  type_str_dic = {0: '原材料', 1: '配件', 2: '成品', 3: '客带'}
-  def type_str(self):
-    return Material.type_str_dic[self.type]
-  # 折扣，只针对成品类
-  # 一口价
-  # 特价品
-  
-    
-class TestOrder(models.Model):
-  member = models.ForeignKey(Member, models.SET_NULL, blank=True, null=True)
-  order_id = models.IntegerField('Order print id', default=0)
-  create_date = models.DateTimeField('Order begin date')
-  status = models.IntegerField('Order status', default=0)
   
   
   

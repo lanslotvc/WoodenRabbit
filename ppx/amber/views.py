@@ -13,6 +13,7 @@ from .models import *
 from .forms import ContactForm
 
 import sys
+import types
 
 # Member ================================================================================
 class MemberListView(LoginRequiredMixin, ListView):
@@ -31,7 +32,17 @@ class MemberListView(LoginRequiredMixin, ListView):
     status = self.request.GET.get('status')
     status = None if status == 'C' else status
     order_by = self.request.GET.get('o')
+    q = self.request.GET.get('q')
     context['get_str'] = ''
+    # query
+    if (q):
+      l = []
+      for m in ol:
+        if (q in m.name) or (q in m.wechat) or (q in m.email) or (q in str(m.mobile)) or (q in str(m.phone)) or (q in m.address) or (q in str(m.birthday)) or (q in m.tag):
+          l.append(m)
+      ol = l
+      context['q'] = 1
+    # filter
     if (join_date__year):
       ol = [ x for x in ol if x.join_date.year == int(join_date__year) ]
       context['get_str'] += ('&join_date__year=' + join_date__year)
@@ -49,7 +60,7 @@ class MemberListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.status == int(status) ]
       context['get_str'] += ('&status=' + status)
       context['s'] = int(status)
-
+    # order
     if (order_by):
       order_by = int(order_by)
       order = abs(order_by)
@@ -63,19 +74,27 @@ class MemberListView(LoginRequiredMixin, ListView):
         ol = sorted(ol, key=lambda m: m.n_craft_orders)
       elif (order == 5):
         ol = sorted(ol, key=lambda m: m._next_birth())
+      elif (order == 6):
+        ol = sorted(ol, key=lambda m: m.ds_acc)
       if (order_by < 0):
         ol.reverse()
       context['order_by'] = order_by
+
     context['object_list'] = ol
     context['can_edit_member'] = self.request.user.has_perm('amber.edit_member')
     context['now'] = timezone.now()
-    #context['dummy'] = join_date__year#'testing'
+    context['dummy'] = 'testing'
     return context
 
 class MemberDetailView(LoginRequiredMixin, DetailView):
   model = Member
   def get_context_data(self, **kwargs):
     context = super(MemberDetailView, self).get_context_data(**kwargs)
+    member = context['member']
+    if member.upstream:
+      ups = Member.objects.filter(mobile=member.upstream)
+      if len(ups) == 1:
+        context['upstream'] = ups[0]
     context['can_edit_member'] = self.request.user.has_perm('amber.edit_member')
     context['now'] = timezone.now()
     return context
@@ -83,13 +102,21 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
 class MemberCreateView(PermissionRequiredMixin, CreateView):
   model = Member
   template_name_suffix = '_create_form'
-  fields = ['name', 'email', 'mobile', 'phone', 'address', 'gender', 'birthday', 'rank', 'tag', 'portrait']
+  fields = ['name', 'nick', 'email', 'wechat', 'source', 'upstream', 'mobile', 'phone', 'address', 'gender', 'birthday', 'rank', 'tag', 'portrait']
   permission_required = 'amber.edit_member'
+  
+  def form_valid(self, form):
+    obj = form.save(commit = False)
+    ups = obj.upstream
+    users = Member.objects.all()
+    obj.upstream = ups if any([ ups == x.mobile for x in users ]) else 0
+    obj.save()
+    return super(MemberCreateView, self).form_valid(form)
 
 class MemberUpdateView(PermissionRequiredMixin, UpdateView):
   model = Member
   template_name_suffix = '_update_form'
-  fields = ['email', 'mobile', 'phone', 'address', 'birthday', 'rank', 'tag', 'accumulates', 'n_purchase_orders', 'n_craft_orders', 'status', 'portrait']
+  fields = ['name', 'nick', 'email', 'wechat', 'source', 'phone', 'address', 'rank', 'tag', 'status', 'portrait']
   permission_required = 'amber.edit_member'
 
 # Contact ================================================================================

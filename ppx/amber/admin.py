@@ -4,17 +4,15 @@ from django.contrib import admin
 from .models import *
 
 class MemberAdmin(admin.ModelAdmin):
-  list_display=('name'
-            #, 'email', 'mobile', 'phone', 'address'
+  list_display=('name', 'nick', 'phone'
             , 'gender'
-            , 'accumulates', 'n_purchase_orders', 'n_craft_orders'
-            , 'rank', 'status', 'decro_portrait'
+            , 'accumulates', 'ds_acc', 'n_purchase_orders', 'n_craft_orders'
+            , 'rank', 'status', 'source', 'decro_portrait'
             )
-  list_editable = ['accumulates', 'n_purchase_orders', 'n_craft_orders']
-  list_filter =('accumulates', 'n_purchase_orders', 'n_craft_orders', 'rank', 'status') #过滤器
-  search_fields =('name', 'mobile', 'decro_gender', 'birthday') #搜索字段
+  list_editable = ['accumulates', 'ds_acc', 'n_purchase_orders', 'n_craft_orders']
+  list_filter =('rank', 'status', 'source') #过滤器
+  search_fields =('name', 'nick', 'mobile', 'gender', 'birthday') #搜索字段
   date_hierarchy = 'join_date'   # 详细时间分层筛选
-  #exclude = ('birthday',)
 
 class InBoundAdmin(admin.ModelAdmin):
   pass

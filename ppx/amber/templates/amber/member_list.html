@@ -3,11 +3,22 @@
 {% block content %}
 <h3>会员 = {{ now }} -- {{ dummy }}</h3>
 
+<div id="toolbar">
+  <form id="changelist-search" method="get">
+    <div><!-- DIV needed for valid HTML -->
+      <label for="searchbar"><img src="/static/admin/img/search.svg" alt="Search" /></label>
+      <input type="text" size="40" name="q" value="" id="searchbar" autofocus />
+      <input type="submit" value="搜索" />
+      {% if q %}<a href="?">全部</a>{% endif %}
+    </div>
+  </form>
+</div>
+
 <div class="xfull">
   <ul class="toplinks">
     <li>入会日期</li>
   {% for year in ylist %}
-    <li><a href="?{{ get_str }}&join_date__year={{ year }}">{% if y == year %} > {%endif%} {{ year }} {% if y == year %} < {%endif%}</a></li>
+    <li><a href="?{{ get_str }}&join_date__year={{ year }}">{% if y == year %} > {% endif %} {{ year }} {% if y == year %} < {% endif %}</a></li>
   {% endfor %}
     <li><a href="?{{ get_str }}&join_date__year=C">全部</a></li>
   </ul><br class="clear" />
@@ -15,25 +26,25 @@
 <div class="xfull">
   <ul class="toplinks">
     <li>性别</li>
-    <li><a href="?{{ get_str }}&gender=0">{% if g == 0 %} > {%endif%} 美女 {% if g == 0 %} < {%endif%} </a></li>
-    <li><a href="?{{ get_str }}&gender=1">{% if g == 1 %} > {%endif%} 帅哥 {% if g == 1 %} < {%endif%} </a></li>
+    <li><a href="?{{ get_str }}&gender=0">{% if g == 0 %} > {% endif %} 美女 {% if g == 0 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&gender=1">{% if g == 1 %} > {% endif %} 帅哥 {% if g == 1 %} < {% endif %} </a></li>
     <li><a href="?{{ get_str }}&gender=C">全部</a></li>
   </ul><br class="clear" />
 </div>
 <div class="xfull">
   <ul class="toplinks">
     <li>VIP等级</li>
-    <li><a href="?{{ get_str }}&rank=0">{% if r == 0 %} > {%endif%} 普通会员 {% if r == 0 %} < {%endif%}</a></li>
-    <li><a href="?{{ get_str }}&rank=1">{% if r == 1 %} > {%endif%} 高级会员 {% if r == 1 %} < {%endif%}</a></li>
-    <li><a href="?{{ get_str }}&rank=2">{% if r == 2 %} > {%endif%} 至尊会员 {% if r == 2 %} < {%endif%}</a></li>
+    <li><a href="?{{ get_str }}&rank=0">{% if r == 0 %} > {% endif %} 普通会员 {% if r == 0 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&rank=1">{% if r == 1 %} > {% endif %} 高级会员 {% if r == 1 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&rank=2">{% if r == 2 %} > {% endif %} 至尊会员 {% if r == 2 %} < {% endif %}</a></li>
     <li><a href="?{{ get_str }}&rank=C">全部</a></li>
   </ul><br class="clear" />
 </div>
 <div class="xfull">
   <ul class="toplinks">
     <li>会员状态</li>
-    <li><a href="?{{ get_str }}&status=0">{% if s == 0 %} > {%endif%} 已退 {% if s == 0 %} < {%endif%}</a></li>
-    <li><a href="?{{ get_str }}&status=1">{% if s == 1 %} > {%endif%} 活跃 {% if s == 1 %} < {%endif%}</a></li>
+    <li><a href="?{{ get_str }}&status=0">{% if s == 0 %} > {% endif %} 已退 {% if s == 0 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&status=1">{% if s == 1 %} > {% endif %} 活跃 {% if s == 1 %} < {% endif %}</a></li>
     <li><a href="?{{ get_str }}&status=C">全部</a></li>
   </ul><br class="clear" />
 </div>
@@ -47,6 +58,7 @@
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">销售订单</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">制作订单</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 5 %}-5{% else %}5{% endif %}">下个生日</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 6 %}-6{% else %}6{% endif %}">下线消费</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">靓照</div><div class="clear"></div></th>
     </tr>
 {% for member in object_list %}
@@ -56,6 +68,7 @@
       <td>{{ member.n_purchase_orders }}</td>
       <td>{{ member.n_craft_orders }}</td>
       <td>{{ member.next_birthday }}</td>
+      <td>{{ member.ds_acc }}</td>
       <td>{{ member.decro_portrait }}</td>
     </tr>
 {% empty %}
@@ -69,7 +82,7 @@
 <div class="modify">
   <span><a href="{% url 'amber:member_create' %}">添加会员</a></span>
 </div>
-{%endif%}
+{% endif %}
 {% endblock %}
 
 

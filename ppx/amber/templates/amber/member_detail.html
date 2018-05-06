@@ -4,14 +4,21 @@
 <h5>{{ member }} - {{ now }}</h5>
 <ul>
     <li>{{ member.name }}</li>
+    <li>{{ member.nick }}</li>
     <li>{{ member.email }}</li>
+    <li>{{ member.wechat }}</li>
+    <li>{{ member.get_source_display }}</li>
     <li>{{ member.mobile }}</li>
+    <li>{{ member.phone }}</li>
     <li>{{ member.address }}</li>
     <li>{{ member.get_gender_display }}</li>
     <li>{{ member.join_date }}</li>
     <li>{{ member.birthday }}</li>
     <li>{{ member.get_rank_display }}</li>
     <li>{{ member.get_status_display }}</li>
+  {% if member.upstream %}
+    <a href="{% url 'amber:member' upstream.id %}">{{ upstream }}</a>
+  {% endif %}
 	{% if member.portrait %}
     <li><img src="../..{{ member.portrait.url }}" alt="" height=120 width=90 /></li>
 	{% endif %}

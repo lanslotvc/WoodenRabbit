@@ -23,16 +23,19 @@ class Member(models.Model):
   source_choice = ((0, '其他'), (1, '会员介绍'), (2, '店面客人'), (3, '网络推广'), (4, '展会'))
   
   name = models.CharField('姓名', max_length=32)
+  nick = models.CharField('昵称', max_length=64)
   wechat = models.CharField('微信号', max_length=64)
   source = models.IntegerField('来源', default=0, choices=source_choice)
+  upstream = models.IntegerField('介绍人', default=0)
   email = models.EmailField('邮箱')
-  mobile = models.IntegerField('手机', default=0)
+  mobile = models.IntegerField('手机', default=0, unique=True)
   phone = models.IntegerField('座机', default=0)
   address = models.TextField('地址')
   gender = models.IntegerField('性别', default=0, choices=gender_choice)
   join_date = models.DateTimeField('加入会员日期', default=timezone.now)
   birthday = models.DateTimeField('生日')
   accumulates = models.IntegerField('累积消费', default=0)
+  ds_acc = models.IntegerField('下线累积消费', default=0)
   n_purchase_orders = models.IntegerField('累积销售订单', default=0)
   n_craft_orders = models.IntegerField('累积制作订单', default=0)
   rank = models.IntegerField('VIP等级', default=0, choices=rank_choice)
@@ -56,7 +59,14 @@ class Member(models.Model):
   def next_birthday(self):
     d = self._next_birth()
     c = 'BB0000' if d < 60 else '000000'
-    a = ' <!!>' if d < 60 else ''
+    if d < 10:
+      a = ' <!!!>'
+    elif d < 30:
+      a = ' <!!>'
+    elif d < 60:
+      a = ' <!>'
+    else:
+      a = ''
     return format_html('<span style="color: #{};">{}{}</span>', c, d, a)
   next_birthday.allow_tags = True
   next_birthday.short_description = '下个生日'

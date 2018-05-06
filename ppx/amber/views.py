@@ -59,13 +59,13 @@ class MemberDetailView(LoginRequiredMixin, DetailView):
 class MemberCreateView(PermissionRequiredMixin, CreateView):
   model = Member
   template_name_suffix = '_create_form'
-  fields = ['name', 'email', 'mobile', 'phone', 'address', 'gender', 'birthday', 'rank', 'tag']
+  fields = ['name', 'email', 'mobile', 'phone', 'address', 'gender', 'birthday', 'rank', 'tag', 'portrait']
   permission_required = 'amber.edit_member'
 
 class MemberUpdateView(PermissionRequiredMixin, UpdateView):
   model = Member
   template_name_suffix = '_update_form'
-  fields = ['email', 'mobile', 'phone', 'address', 'birthday', 'rank', 'tag', 'accumulates', 'n_purchase_orders', 'n_craft_orders', 'status']
+  fields = ['email', 'mobile', 'phone', 'address', 'birthday', 'rank', 'tag', 'accumulates', 'n_purchase_orders', 'n_craft_orders', 'status', 'portrait']
   permission_required = 'amber.edit_member'
 
 # Contact ================================================================================

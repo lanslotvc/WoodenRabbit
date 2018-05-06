@@ -8,7 +8,7 @@ class MemberAdmin(admin.ModelAdmin):
             #, 'email', 'mobile', 'phone', 'address'
             , 'gender'
             , 'accumulates', 'n_purchase_orders', 'n_craft_orders'
-            , 'rank', 'status', 'decro_protrait'
+            , 'rank', 'status', 'decro_portrait'
             )
   list_editable = ['accumulates', 'n_purchase_orders', 'n_craft_orders']
   list_filter =('accumulates', 'n_purchase_orders', 'n_craft_orders', 'rank', 'status') #过滤器

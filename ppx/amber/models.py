@@ -48,12 +48,12 @@ class Member(models.Model):
   decro_gender.allow_tags = True
   decro_gender.short_description = '性别'
   
-  def decro_protrait(self):
+  def decro_portrait(self):
     if (not self.portrait):
       return format_html('<p>不给看～～</p>')
     return format_html('<img src="/amber{0}" alt="" height=120 width=90 />', self.portrait.url)
-  decro_protrait.allow_tags = True
-  decro_protrait.short_description = '靓照'
+  decro_portrait.allow_tags = True
+  decro_portrait.short_description = '靓照'
 
   def __str__(self):
     return self.name + '  [ ' + self.get_gender_display() + ', ' + self.get_rank_display() + ', ' + self.get_status_display() + ' ]'

@@ -90,15 +90,7 @@ class InBound(models.Model):
                     ("canin", "WR: Can add/change/delete inbound sheet"),
                     ("viewbase", "WR: Can access base price"),
                   )
-  '''
-  kind_choice = ((, '白玉'), (, '翡翠'), (, '珍珠'), (, '钻石'), (, '红宝石'), (, '蓝宝石'), (, '祖母绿'), 
-                 (, '尖晶石'), (, '琥珀'), (, '蜜蜡'), (, '欧珀'), (, '绿松石'), (, '舒俱来'), (, '海蓝宝'),
-                 (, '月光石'), (, '拉长石'), (, '碧玺'), (, '玛瑙'), (, '珊瑚'), (, '碧玉'), (, '点翠'),
-                 (, '青晶石'), (, '水晶'), (, '砗磲'), (, '芬达石'), (, '石榴石'), (, '海纹石'), (, '琉璃'),
-                 (, '天珠'), (, '菩提子'), (, '沉香'), (, '红木'),
-                 (, '黄金'), (, '铂金'), (, '白银'),
-                 (9999, '其他'))
-  '''
+
   kind_choice = ((0, '有机宝石'), (1, '无机宝石'), (2, '贵重金属'), (3, '贵重宝石'), (999, '其他'))
   type_choice = ((0, '成品'), (1, '原材料'), (2, '配件'), (3, '客带'))
   
@@ -131,7 +123,7 @@ class Store(models.Model):
   tag = models.TextField('备注', blank=True, null=True)
   
   def __str__(self):
-    return '库存_' + str(self.inb.id)
+    return '库存_' + str(self.inb.id) if self.inb else '库存_找不到入库单啊！'
 
 class StoreImage(models.Model):
   store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)

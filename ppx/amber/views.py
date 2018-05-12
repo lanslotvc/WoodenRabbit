@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
@@ -202,12 +202,27 @@ class StoreListView(LoginRequiredMixin, ListView):
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
   template_name_suffix = '_create_form'
-  fields = ['name', 'kind', 'type', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tag']
+  fields = ['name', 'desc', 'kind', 'type', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tag']
   permission_required = 'amber.canin'
+
+  def get_context_data(self, **kwargs):
+    context = super(InBoundCreateView, self).get_context_data(**kwargs)
+    context['store_list'] = Store.objects.all()
+    return context
 
   def form_valid(self, form):
     obj = form.save(commit = False)
+    '''
+    tag = '>>'
+    tag += ' groups_old:' + str(self.request.POST.getlist('groups_old'))
+    tag += ' groups:' + str(self.request.POST.getlist('groups'))
+    '''
     obj.save()
+    ''' one submit, multiple saves!!!
+    obj2 = form.save(commit = False)
+    obj2.pk = None
+    obj2.save()
+    '''
     Store(inb=obj, remains=obj.quantity).save()
     return super(InBoundCreateView, self).form_valid(form)
 

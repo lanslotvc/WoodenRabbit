@@ -1,0 +1,9 @@
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<h5>上传照片 -- {{ dummy }}</h5>
+<form enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}

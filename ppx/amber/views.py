@@ -136,6 +136,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     context = super(StoreListView, self).get_context_data(**kwargs)
     
     context['ylist'] = list(set([ x.inb.date.year for x in context['object_list']]))
+    context['bylist'] = list(set([ x.inb.by for x in context['object_list']]))
     ol = context['object_list']
     date__year = self.request.GET.get('date__year')
     date__year = None if date__year == 'C' else date__year
@@ -143,6 +144,8 @@ class StoreListView(LoginRequiredMixin, ListView):
     kind = None if kind == 'C' else kind
     type = self.request.GET.get('type')
     type = None if type == 'C' else type
+    by = self.request.GET.get('by')
+    by = None if by == 'C' else by
     order_by = self.request.GET.get('o')
     q = self.request.GET.get('q')
     context['get_str'] = ''
@@ -150,7 +153,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     if (q):
       l = []
       for i in ol:
-        if (q in i.inb.name) or (q in i.inb.desc) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
+        if (q in i.inb.name) or (q in i.inb.desc) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
           l.append(i)
       ol = l
       context['q'] = 1
@@ -167,6 +170,10 @@ class StoreListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.inb.type == int(type) ]
       context['get_str'] += ('&type=' + type)
       context['t'] = int(type)
+    if (by):
+      ol = [ x for x in ol if x.inb.by == by ]
+      context['get_str'] += ('&by=' + by)
+      context['b'] = by
     # order
     if (order_by):
       order_by = int(order_by)
@@ -198,7 +205,18 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['now'] = timezone.now()
     context['dummy'] = 'testing'
     return context
-
+    
+class StoreDetailView(LoginRequiredMixin, DetailView):
+  model = Store
+  def get_context_data(self, **kwargs):
+    context = super(StoreDetailView, self).get_context_data(**kwargs)
+    store = context['store']
+    context['imgs'] = StoreImage.objects.filter(store=store.id)
+    context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['now'] = timezone.now()
+    return context
+    
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
   template_name_suffix = '_create_form'
@@ -217,6 +235,7 @@ class InBoundCreateView(PermissionRequiredMixin, CreateView):
     tag += ' groups_old:' + str(self.request.POST.getlist('groups_old'))
     tag += ' groups:' + str(self.request.POST.getlist('groups'))
     '''
+    obj.by = self.request.user
     obj.save()
     ''' one submit, multiple saves!!!
     obj2 = form.save(commit = False)
@@ -226,6 +245,18 @@ class InBoundCreateView(PermissionRequiredMixin, CreateView):
     Store(inb=obj, remains=obj.quantity).save()
     return super(InBoundCreateView, self).form_valid(form)
 
+class StoreImageView(PermissionRequiredMixin, CreateView):
+  model = StoreImage
+  template_name_suffix = '_create_form'
+  fields = ['image']
+  permission_required = 'amber.canin'
+    
+  def form_valid(self, form):
+    obj = form.save(commit = False)
+    obj.store = Store.objects.filter(id=self.kwargs['store_id'])[0]
+    obj.save()
+    return super(StoreImageView, self).form_valid(form)
+    
 # Create your views here.
 @login_required()
 def index(request):

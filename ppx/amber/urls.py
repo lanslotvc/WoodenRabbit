@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .views import ContactView
 from .views import MemberListView, MemberDetailView, MemberCreateView, MemberUpdateView
-from .views import StoreListView, InBoundCreateView
+from .views import StoreListView, InBoundCreateView, StoreDetailView, StoreImageView
 
 app_name = 'amber'
 urlpatterns = [
@@ -30,10 +30,12 @@ urlpatterns = [
     path('member_list/',         MemberListView.as_view(),    name='member_list'),
     path('member/<pk>/',         MemberDetailView.as_view(),  name='member'),
     path('member_create/',       MemberCreateView.as_view(),  name='member_create'),
-    path('member_update/<pk>',   MemberUpdateView.as_view(),  name='member_update'),
+    path('member/<pk>/update',   MemberUpdateView.as_view(),  name='member_update'),
     
     path('store_list/',          StoreListView.as_view(),     name='store_list'),
+    path('store/<pk>/',          StoreDetailView.as_view(),   name='store'),
     path('inbound_create/',      InBoundCreateView.as_view(), name='inbound_create'),
+    path('store/<store_id>/upload', StoreImageView.as_view(),    name='store_image'),
     
     path('login/',               auth_views.LoginView.as_view(),          name='login'),
     path('logout/',              auth_views.LogoutView.as_view(),         name='logout'),

@@ -44,7 +44,15 @@
     <li><a href="?{{ get_str }}&type=C">全部</a></li>
   </ul><br class="clear" />
 </div>
-
+<div class="xfull">
+  <ul class="toplinks">
+    <li>经手人</li>
+  {% for by in bylist %}
+    <li><a href="?by={{ by }}">{% if b == by %} > {% endif %} {{ by }} {% if b == by %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?by=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
 <div class="results">
 <table>
     <tr>
@@ -59,20 +67,22 @@
       {%endif%}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 8 %}-8{% else %}8{% endif %}">售价</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 9 %}-9{% else %}9{% endif %}">入库日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
     </tr>
-{% for item in object_list %}
+{% for store in object_list %}
     <tr>
-      <td><a href="">{{ item }}</a></td>
-      <td>{{ item.inb.name  }}</td>
-      <td>{{ item.inb.get_kind_display }}</td>
-      <td>{{ item.inb.get_type_display }}</td>
-      <td>{{ item.remains }}</td>
-      <td>{{ item.inb.qunit }}</td>
+      <td><a href="{% url 'amber:store' store.id %}">{{ store }}</a></td>
+      <td>{{ store.inb.name  }}</td>
+      <td>{{ store.inb.get_kind_display }}</td>
+      <td>{{ store.inb.get_type_display }}</td>
+      <td>{{ store.remains }}</td>
+      <td>{{ store.inb.qunit }}</td>
       {% if can_viewbase %}
-      <td>{{ item.inb.baseprice }}</td>
+      <td>{{ store.inb.baseprice }}</td>
       {%endif%}
-      <td>{{ item.inb.saleprice }}</td>
-      <td>{{ item.inb.date }}</td>
+      <td>{{ store.inb.saleprice }}</td>
+      <td>{{ store.inb.date }}</td>
+      <td>{{ store.inb.by }}</td>
     </tr>
 {% empty %}
     <tr><td colspan=4>啥都没有？</td></tr>

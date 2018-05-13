@@ -106,6 +106,7 @@ class InBound(models.Model):
   baseprice = models.IntegerField('成本', default=0)
   saleprice = models.IntegerField('售价', default=0)
   date = models.DateTimeField('入库日期', default=timezone.now)
+  by = models.CharField('经手人', max_length=128)
 
   tag = models.TextField('备注', blank=True, null=True)
 
@@ -129,6 +130,9 @@ class StoreImage(models.Model):
   store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
   image = models.ImageField('照片', upload_to='upload/store', blank=True, null=True)
   
+  def get_absolute_url(self):
+    return reverse('amber:store', kwargs={'pk': self.store.pk})
+    
 class OutBound(models.Model):
   pass
 

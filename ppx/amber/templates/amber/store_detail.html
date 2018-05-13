@@ -1,0 +1,39 @@
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<h5>{{ store }} - {{ now }}</h5>
+<ul>
+    <li>{{ store }}</li>
+    <li>{{ store.inb.name }}</li>
+    <li>{{ store.inb.desc }}</li>
+    <li>{{ store.inb.get_kind_display }}</li>
+    <li>{{ store.inb.get_type_display }}</li>
+    <li>{{ store.inb.quantity }}</li>
+    <li>{{ store.inb.qunit }}</li>
+    <li>{{ store.inb.weight }}</li>
+    <li>{{ store.inb.wunit }}</li>
+  {% if can_viewbase %}  
+    <li>{{ store.inb.baseprice }}</li>
+  {% endif %}
+    <li>{{ store.inb.saleprice }}</li>
+    <li>{{ store.inb.date }}</li>
+    <li>{{ store.inb.by }}</li>
+    <li>{{ store.inb.tag }}</li>
+    <li>{{ store.remains }}</li>
+    <li>{{ store.discount }}</li>
+    <li>{{ store.bestsale }}</li>
+    <li>{{ store.tag }}</li>
+  {% for img in imgs %}
+    <li><img src="../..{{ img.image.url }}" alt="" height=120 width=90 /></li>
+  {% endfor %}
+</ul>
+
+{% if can_in %}
+<div class="modify">
+  <a href="{% url 'amber:store_image' store.id %}" >上传照片</a>
+</div>  
+{% endif %}
+<div class="modify">
+  <a href="{% url 'amber:store_list' %}" >返回</a>
+</div>  
+{% endblock %}

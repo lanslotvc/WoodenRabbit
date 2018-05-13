@@ -22,8 +22,12 @@ class OutBoundAdmin(admin.ModelAdmin):
 
 class StoreAdmin(admin.ModelAdmin):
   pass
+  
+class StoreImageAdmin(admin.ModelAdmin):
+  pass
 
 admin.site.register(Member,   MemberAdmin)
 admin.site.register(InBound,  InBoundAdmin)
 admin.site.register(OutBound, OutBoundAdmin)
 admin.site.register(Store,    StoreAdmin)
+admin.site.register(StoreImage, StoreImageAdmin)

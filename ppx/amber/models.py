@@ -134,8 +134,11 @@ class StoreImage(models.Model):
     return reverse('amber:store', kwargs={'pk': self.store.pk})
     
 class OutBound(models.Model):
-  pass
-
+  class Meta:
+    permissions = (
+                    ("canout", "WR: Can operate on outbound sheet"),
+                  )
+  by = models.CharField('经手人', max_length=128)
   
   
   

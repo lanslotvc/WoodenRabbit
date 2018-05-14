@@ -202,6 +202,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['object_list'] = ol
     context['can_in'] = self.request.user.has_perm('amber.canin')
     context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
     context['dummy'] = 'testing'
     return context
@@ -216,6 +217,10 @@ class StoreDetailView(LoginRequiredMixin, DetailView):
     context['can_in'] = self.request.user.has_perm('amber.canin')
     context['now'] = timezone.now()
     return context
+
+class InBoundSheetView(PermissionRequiredMixin, DetailView):
+  model = InBound
+  permission_required = 'amber.canin'
     
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
@@ -256,7 +261,30 @@ class StoreImageView(PermissionRequiredMixin, CreateView):
     obj.store = Store.objects.filter(id=self.kwargs['store_id'])[0]
     obj.save()
     return super(StoreImageView, self).form_valid(form)
-    
+
+class OutBoundCreateView(PermissionRequiredMixin, CreateView):
+  model = OutBound
+  template_name_suffix = '_create_form'
+  fields = ['by']
+  permission_required = 'amber.canout'
+
+  def get_context_data(self, **kwargs):
+    context = super(OutBoundCreateView, self).get_context_data(**kwargs)
+    context['store_list'] = Store.objects.all()
+    return context
+
+  def form_valid(self, form):
+    obj = form.save(commit = False)
+    stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
+    obj.by = self.request.user
+    #obj.save()
+    ''' one submit, multiple saves!!!
+    obj2 = form.save(commit = False)
+    obj2.pk = None
+    obj2.save()
+    '''
+    return super(OutBoundCreateView, self).form_valid(form)
+
 # Create your views here.
 @login_required()
 def index(request):

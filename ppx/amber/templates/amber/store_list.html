@@ -64,10 +64,13 @@
       <th scope="col" class="sortable column-name"><div class="text">单位</div><div class="clear"></div></th>
       {% if can_viewbase %}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 7 %}-7{% else %}7{% endif %}">成本</a></div><div class="clear"></div></th>
-      {%endif%}
+      {% endif %}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 8 %}-8{% else %}8{% endif %}">售价</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 9 %}-9{% else %}9{% endif %}">入库日期</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
+      {% if can_in %}
+      <th scope="col" class="sortable column-name"><div class="text">操作</div><div class="clear"></div></th>
+      {% endif %}
     </tr>
 {% for store in object_list %}
     <tr>
@@ -79,10 +82,13 @@
       <td>{{ store.inb.qunit }}</td>
       {% if can_viewbase %}
       <td>{{ store.inb.baseprice }}</td>
-      {%endif%}
+      {% endif %}
       <td>{{ store.inb.saleprice }}</td>
       <td>{{ store.inb.date }}</td>
       <td>{{ store.inb.by }}</td>
+      {% if can_in %}
+      <td><a href="{% url 'amber:inbound' store.inb.id %}" target="_blank">打印入库单</a></td>
+      {% endif %}
     </tr>
 {% empty %}
     <tr><td colspan=4>啥都没有？</td></tr>
@@ -95,7 +101,12 @@
 <div class="modify">
   <span><a href="{% url 'amber:inbound_create' %}">入库</a></span>
 </div>
-{%endif%}
+{% endif %}
+{% if can_out %}
+<div class="modify" float="right">
+  <span><a href="{% url 'amber:outbound_create' %}">出库</a></span>
+</div>
+{% endif %}
 {% endblock %}
 
 

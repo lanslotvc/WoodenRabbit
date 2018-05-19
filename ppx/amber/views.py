@@ -146,6 +146,8 @@ class StoreListView(LoginRequiredMixin, ListView):
     type = None if type == 'C' else type
     by = self.request.GET.get('by')
     by = None if by == 'C' else by
+    status = self.request.GET.get('status')
+    status = None if status == 'C' else status
     order_by = self.request.GET.get('o')
     q = self.request.GET.get('q')
     context['get_str'] = ''
@@ -174,6 +176,10 @@ class StoreListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.inb.by == by ]
       context['get_str'] += ('&by=' + by)
       context['b'] = by
+    if (status):
+      ol = [ x for x in ol if x.status == int(status) ]
+      context['get_str'] += ('&status=' + status)
+      context['s'] = int(status)
     # order
     if (order_by):
       order_by = int(order_by)
@@ -196,6 +202,10 @@ class StoreListView(LoginRequiredMixin, ListView):
         ol = sorted(ol, key=lambda i: i.inb.saleprice)
       elif (order == 9):
         ol = sorted(ol, key=lambda i: i.inb.date)
+      elif (order == 10):
+        pass
+      elif (order == 11):
+        ol = sorted(ol, key=lambda i: i.status)
       if (order_by < 0):
         ol.reverse()
       context['order_by'] = order_by
@@ -213,8 +223,10 @@ class StoreDetailView(LoginRequiredMixin, DetailView):
     context = super(StoreDetailView, self).get_context_data(**kwargs)
     store = context['store']
     context['imgs'] = StoreImage.objects.filter(store=store.id)
+    context['outbounds'] = OutBound.objects.filter(store=store.id)
     context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
     context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
     return context
 
@@ -235,18 +247,8 @@ class InBoundCreateView(PermissionRequiredMixin, CreateView):
 
   def form_valid(self, form):
     obj = form.save(commit = False)
-    '''
-    tag = '>>'
-    tag += ' groups_old:' + str(self.request.POST.getlist('groups_old'))
-    tag += ' groups:' + str(self.request.POST.getlist('groups'))
-    '''
-    obj.by = self.request.user
+    obj.by = str(self.request.user)
     obj.save()
-    ''' one submit, multiple saves!!!
-    obj2 = form.save(commit = False)
-    obj2.pk = None
-    obj2.save()
-    '''
     Store(inb=obj, remains=obj.quantity).save()
     return super(InBoundCreateView, self).form_valid(form)
 
@@ -265,19 +267,25 @@ class StoreImageView(PermissionRequiredMixin, CreateView):
 class OutBoundCreateView(PermissionRequiredMixin, CreateView):
   model = OutBound
   template_name_suffix = '_create_form'
-  fields = ['by']
+  fields = ['quantity']
   permission_required = 'amber.canout'
 
   def get_context_data(self, **kwargs):
     context = super(OutBoundCreateView, self).get_context_data(**kwargs)
-    context['store_list'] = Store.objects.all()
+    context['store'] = Store.objects.filter(id=self.kwargs['store_id'])[0]
     return context
 
   def form_valid(self, form):
     obj = form.save(commit = False)
-    stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
-    obj.by = self.request.user
-    #obj.save()
+    #stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
+    obj.store = Store.objects.filter(id=self.kwargs['store_id'])[0]
+    obj.by = str(self.request.user)
+    obj.price = obj.store.final_price
+    obj.store.remains = obj.store.remains - obj.quantity
+    if (obj.store.remains == 0):
+      obj.store.status = 1
+    obj.store.save()
+    obj.save()
     ''' one submit, multiple saves!!!
     obj2 = form.save(commit = False)
     obj2.pk = None

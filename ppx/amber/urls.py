@@ -38,7 +38,7 @@ urlpatterns = [
     path('inbound/<pk>/',           InBoundSheetView.as_view(),   name='inbound'),
     path('inbound_create/',         InBoundCreateView.as_view(),  name='inbound_create'),
     path('store/<store_id>/upload', StoreImageView.as_view(),     name='store_image'),
-    path('outbound_create/',        OutBoundCreateView.as_view(), name='outbound_create'),
+    path('store/<store_id>/out',    OutBoundCreateView.as_view(), name='outbound_create'),
     
     path('login/',                  auth_views.LoginView.as_view(),                               name='login'),
     path('logout/',                 auth_views.LogoutView.as_view(),                              name='logout'),

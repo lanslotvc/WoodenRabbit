@@ -16,15 +16,28 @@
     <li>{{ store.inb.baseprice }}</li>
   {% endif %}
     <li>{{ store.inb.saleprice }}</li>
+    <li>{{ store.final_price }}</li>
     <li>{{ store.inb.date }}</li>
     <li>{{ store.inb.by }}</li>
     <li>{{ store.inb.tag }}</li>
     <li>{{ store.remains }}</li>
     <li>{{ store.discount }}</li>
     <li>{{ store.bestsale }}</li>
+    <li>{{ store.get_status_display }}</li>
     <li>{{ store.tag }}</li>
   {% for img in imgs %}
     <li><img src="../..{{ img.image.url }}" alt="" height=120 width=90 /></li>
+  {% endfor %}
+  {% for outbound in outbounds %}
+    <li>{{ outbound }}
+      <ul>
+        <li>{{ outbound.quantity }}</li>
+        <li>{{ outbound.date }}</li>
+        <li>{{ outbound.by }}</li>
+        <li>{{ outbound.price }}</li>
+        <li>{{ outbound.type }}</li>
+      </ul>
+    </li>
   {% endfor %}
 </ul>
 
@@ -33,7 +46,20 @@
   <a href="{% url 'amber:store_image' store.id %}" >上传照片</a>
 </div>  
 {% endif %}
+
+{% if user.is_superuser %}
+<div class="modify">
+  <a href="" >修改</a>
+</div>  
+{% endif %}
+
+{% if can_out and store.status == 0 %}
+<div class="modify" float="right">
+  <span><a href="{% url 'amber:outbound_create' store.id %}">出库</a></span>
+</div>
+{% endif %}
+
 <div class="modify">
   <a href="{% url 'amber:store_list' %}" >返回</a>
-</div>  
+</div>
 {% endblock %}

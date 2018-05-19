@@ -2,15 +2,34 @@
 
 {% block content %}
 <h5>新出库</h5>
-<form action="" method="post">{% csrf_token %}
-    <div>
+<h3>{{ store.inb.name }} : {{ store.remains }} {{store.inb.qunit}}</h3>
+<form id="outform" action="" method="post">{% csrf_token %}
+    <!--div>
       <select name="stores" id="id_stores" multiple="multiple" class="selectfilter" data-field-name="库存" data-is-stacked="0">
 {% for store in store_list %}
         <option value="{{ store.id }}">{{ store }}: {{ store.inb.name }} - ({{ store.inb.desc }})</option>
 {% endfor %}
       </select>
-    </div>
+    </div-->
     {{ form.as_p }}
-    <input type="submit" value="Save" />
+    <input id="go" type="button" value="Save" />
 </form>
+<script>
+    var f = document.getElementById('outform');
+    var go = document.getElementById('go');
+    go.onclick = function() {
+        var quantity = f.quantity.value
+        if (quantity > 0 && quantity <= {{ store.remains }}){
+            //验证通过，提交表单数据
+            f.submit();
+        } else if (quantity > {{ store.remains }}) {
+            alert('没剩辣么多了。。。');
+        } else {
+            alert('有点数，好不？');
+        }
+    }
+</script>
+<div class="modify">
+  <a href="{% url 'amber:store' store.id %}" >返回</a>
+</div>  
 {% endblock %}

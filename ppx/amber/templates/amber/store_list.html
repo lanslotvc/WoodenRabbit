@@ -53,6 +53,15 @@
     <li><a href="?by=C">全部</a></li>
   </ul><br class="clear" />
 </div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>库存状态</li>
+    <li><a href="?{{ get_str }}&status=0">{% if s == 0 %} > {% endif %} 正常 {% if s == 0 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&status=1">{% if s == 1 %} > {% endif %} 已出库 {% if s == 1 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&status=2">{% if s == 2 %} > {% endif %} 找不到了 {% if s == 2 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&status=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
 <div class="results">
 <table>
     <tr>
@@ -68,9 +77,8 @@
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 8 %}-8{% else %}8{% endif %}">售价</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 9 %}-9{% else %}9{% endif %}">入库日期</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
-      {% if can_in %}
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 11 %}-11{% else %}10{% endif %}">库存状态</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">操作</div><div class="clear"></div></th>
-      {% endif %}
     </tr>
 {% for store in object_list %}
     <tr>
@@ -83,12 +91,14 @@
       {% if can_viewbase %}
       <td>{{ store.inb.baseprice }}</td>
       {% endif %}
-      <td>{{ store.inb.saleprice }}</td>
+      <td>{{ store.final_price }}</td>
       <td>{{ store.inb.date }}</td>
       <td>{{ store.inb.by }}</td>
-      {% if can_in %}
-      <td><a href="{% url 'amber:inbound' store.inb.id %}" target="_blank">打印入库单</a></td>
-      {% endif %}
+      <td>{{ store.get_status_display }}</td>
+      <td>
+        {% if can_in %}<a href="{% url 'amber:inbound' store.inb.id %}" target="_blank">打印入库单</a>{% endif %}
+        {% if can_out and store.status == 0 %}<a href="{% url 'amber:outbound_create' store.id %}">出库</a>{% endif %}
+      </td>
     </tr>
 {% empty %}
     <tr><td colspan=4>啥都没有？</td></tr>
@@ -100,11 +110,6 @@
 {% if can_in %}
 <div class="modify">
   <span><a href="{% url 'amber:inbound_create' %}">入库</a></span>
-</div>
-{% endif %}
-{% if can_out %}
-<div class="modify" float="right">
-  <span><a href="{% url 'amber:outbound_create' %}">出库</a></span>
 </div>
 {% endif %}
 {% endblock %}

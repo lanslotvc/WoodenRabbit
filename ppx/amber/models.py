@@ -116,15 +116,25 @@ class InBound(models.Model):
     return reverse('amber:store_list')
 
 class Store(models.Model):
+  status_choice = ((0, '正常'), (1, '已出库'), (2, '找不到了>.<'))
+  
   inb = models.ForeignKey(InBound, models.SET_NULL, blank=True, null=True)
   remains = models.IntegerField('剩余', default=0)
-  discount = models.IntegerField('折扣', default=0)
+  status = models.IntegerField('状态', default=0, choices=status_choice)
+  discount = models.IntegerField('折扣', default=100)
   bestsale = models.IntegerField('特价', default=0)
 
   tag = models.TextField('备注', blank=True, null=True)
   
   def __str__(self):
     return '库存_' + str(self.inb.id) if self.inb else '库存_找不到入库单啊！'
+  def final_price(self):
+    price = self.inb.saleprice
+    if (self.bestsale != 0):
+      return self.bestsale
+    if (self.discount > 0 and self.discount < 100):
+      return int(price * self.discount / 100)
+    return price
 
 class StoreImage(models.Model):
   store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
@@ -138,9 +148,20 @@ class OutBound(models.Model):
     permissions = (
                     ("canout", "WR: Can operate on outbound sheet"),
                   )
+
+  type_choice = ((0, '未限定'), (1, '销售单'), (2, '生产单'))
+  
+  store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
+  quantity = models.IntegerField('数量', default=0)
+  date = models.DateTimeField('出库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
-  
-  
+  price = models.IntegerField('售价', default=0)
+  type = models.IntegerField('出库类型', default=0, choices=type_choice)
+
+  def __str__(self):
+    return '出库单_' + str(self.id)
+  def get_absolute_url(self):
+    return reverse('amber:store', kwargs={'pk': self.store.pk})
   
   
   

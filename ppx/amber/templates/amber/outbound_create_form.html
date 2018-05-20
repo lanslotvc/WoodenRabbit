@@ -4,13 +4,6 @@
 <h5>新出库</h5>
 <h3>{{ store.inb.name }} : {{ store.remains }} {{store.inb.qunit}}</h3>
 <form id="outform" action="" method="post">{% csrf_token %}
-    <!--div>
-      <select name="stores" id="id_stores" multiple="multiple" class="selectfilter" data-field-name="库存" data-is-stacked="0">
-{% for store in store_list %}
-        <option value="{{ store.id }}">{{ store }}: {{ store.inb.name }} - ({{ store.inb.desc }})</option>
-{% endfor %}
-      </select>
-    </div-->
     {{ form.as_p }}
     <input id="go" type="button" value="Save" />
 </form>

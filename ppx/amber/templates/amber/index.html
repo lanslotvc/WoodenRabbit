@@ -9,13 +9,22 @@
 <div>
   <h2><a href="{% url 'amber:store_list' %}" >库存查看</a></h2>
 </div>
-{%endif%}
+{% endif %}
 
 {% if is_group_sales or is_group_designer or user.is_superuser %}
 <div>
-  <h2><a href="" >订单管理</a></h2>
+  {% if pending_outbound %}
+  <div>
+    <select name="outbounds" id="id_outbounds" multiple="multiple" class="selectfilter" data-field-name="进行中的出库单" data-is-stacked="0">
+    {% for ob in pending_outbound %}
+      <option value="{{ ob.id }}">{{ ob }}: {{ ob.store.inb.name }} - ({{ ob.store.inb.desc }}) - {{ ob.quantity }}({{ ob.store.inb.qunit }})</option>
+   {% endfor %}
+    </select>
+  </div>
+  {% endif %}
 </div>
-{%endif%}
+{% endif %}
+
 {% endblock %}
 
 {% block sidebar %}

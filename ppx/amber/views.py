@@ -304,6 +304,7 @@ def index(request):
   context['is_group_finance']  = group == 'finance'
   context['is_group_designer'] = group == 'designer'
   context['is_group_sales']    = group == 'sales'
+  context['pending_outbound']  = OutBound.objects.filter(type=0)
   context['dummy'] = 'testing'
   return render(request, 'amber/index.html', context)
 

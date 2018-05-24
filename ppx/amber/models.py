@@ -47,6 +47,7 @@ class Member(models.Model):
   # 介绍人 optional
   # 发展下线 accumulate
   # 第一单优惠 accumulates == 0
+  # 字段：积分，推荐人积分
   
   def _next_birth(self):
     today = timezone.now().replace(tzinfo=None)

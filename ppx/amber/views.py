@@ -109,6 +109,7 @@ class MemberCreateView(PermissionRequiredMixin, CreateView):
     ups = obj.upstream
     users = Member.objects.all()
     obj.upstream = ups if any([ ups == x.mobile for x in users ]) else 0
+    # if upstream, 添加积分
     obj.save()
     return super(MemberCreateView, self).form_valid(form)
 
@@ -214,7 +215,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
     context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
-    context['dummy'] = 'testing'
+    context['dummy'] = '按月打印入库单？导出到csv，链接X2，当月入库出库页面（上个月？）'
     return context
     
 class StoreDetailView(LoginRequiredMixin, DetailView):
@@ -280,7 +281,7 @@ class OutBoundCreateView(PermissionRequiredMixin, CreateView):
     #stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
     obj.store = Store.objects.filter(id=self.kwargs['store_id'])[0]
     obj.by = str(self.request.user)
-    obj.price = obj.store.final_price
+    obj.price = obj.store.final_price()
     obj.store.remains = obj.store.remains - obj.quantity
     if (obj.store.remains == 0):
       obj.store.status = 1

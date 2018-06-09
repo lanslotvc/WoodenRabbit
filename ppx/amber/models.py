@@ -93,7 +93,7 @@ class InBound(models.Model):
                   )
 
   kind_choice = ((0, '有机宝石'), (1, '无机宝石'), (2, '贵重金属'), (3, '贵重宝石'), (999, '其他'))
-  type_choice = ((0, '成品'), (1, '原材料'), (2, '配件'), (3, '客带'))
+  type_choice = ((0, '成品'), (1, '原石'), (2, 'K金配件'), (3, '金链'), (4, '自有产品'), (999, '客带'))
   
   name = models.CharField('名称', max_length=64)
   desc = models.CharField('细别', max_length=128)
@@ -106,6 +106,8 @@ class InBound(models.Model):
   wunit = models.CharField('重量单位', max_length=16, blank=True, null=True)
   baseprice = models.IntegerField('成本', default=0)
   saleprice = models.IntegerField('售价', default=0)
+  tweight = models.IntegerField('总重', default=0)
+  tprice = models.IntegerField('总价', default=0)
   date = models.DateTimeField('入库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
 

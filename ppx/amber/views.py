@@ -249,6 +249,10 @@ class InBoundCreateView(PermissionRequiredMixin, CreateView):
   def form_valid(self, form):
     obj = form.save(commit = False)
     obj.by = str(self.request.user)
+    if obj.tweight == 0:
+      obj.tweight = obj.weight * obj.quantity
+    if obj.tprice == 0:
+      obj.tprice = obj.saleprice * obj.quantity
     obj.save()
     Store(inb=obj, remains=obj.quantity).save()
     return super(InBoundCreateView, self).form_valid(form)

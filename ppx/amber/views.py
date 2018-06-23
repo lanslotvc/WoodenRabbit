@@ -141,12 +141,18 @@ class StoreListView(LoginRequiredMixin, ListView):
     ol = context['object_list']
     date__year = self.request.GET.get('date__year')
     date__year = None if date__year == 'C' else date__year
+    date__month = self.request.GET.get('date__month')
+    date__month = None if date__month == 'C' else date__month
     kind = self.request.GET.get('kind')
     kind = None if kind == 'C' else kind
     type = self.request.GET.get('type')
     type = None if type == 'C' else type
     by = self.request.GET.get('by')
     by = None if by == 'C' else by
+    pr = self.request.GET.get('pr')
+    pr = None if pr == 'C' else pr
+    ktype = self.request.GET.get('ktype')
+    ktype = None if ktype == 'C' else ktype
     status = self.request.GET.get('status')
     status = None if status == 'C' else status
     order_by = self.request.GET.get('o')
@@ -156,7 +162,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     if (q):
       l = []
       for i in ol:
-        if (q in i.inb.name) or (q in i.inb.desc) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
+        if (q in i.inb.name) or (q in i.inb) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
           l.append(i)
       ol = l
       context['q'] = 1
@@ -165,6 +171,10 @@ class StoreListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.inb.date.year == int(date__year) ]
       context['get_str'] += ('&date__year=' + date__year)
       context['y'] = int(date__year)
+    if (date__month):
+      ol = [ x for x in ol if x.inb.date.month == int(date__month) ]
+      context['get_str'] += ('&date__month=' + date__month)
+      context['m'] = int(date__month)
     if (kind):
       ol = [ x for x in ol if x.inb.kind == int(kind) ]
       context['get_str'] += ('&kind=' + kind)
@@ -177,6 +187,14 @@ class StoreListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.inb.by == by ]
       context['get_str'] += ('&by=' + by)
       context['b'] = by
+    if (pr):
+      ol = [ x for x in ol if x.inb.provider == pr ]
+      context['get_str'] += ('&pr=' + pr)
+      context['p'] = pr
+    if (ktype):
+      ol = [ x for x in ol if x.inb.ktype == int(ktype) ]
+      context['get_str'] += ('&ktype=' + ktype)
+      context['kt'] = int(ktype)
     if (status):
       ol = [ x for x in ol if x.status == int(status) ]
       context['get_str'] += ('&status=' + status)
@@ -193,6 +211,8 @@ class StoreListView(LoginRequiredMixin, ListView):
         ol = sorted(ol, key=lambda i: i.inb.kind)
       elif (order == 4):
         ol = sorted(ol, key=lambda i: i.inb.type)
+      elif (order == 40):
+        ol = sorted(ol, key=lambda i: i.inb.where)
       elif (order == 5):
         ol = sorted(ol, key=lambda i: i.remains)
       elif (order == 6):
@@ -201,10 +221,12 @@ class StoreListView(LoginRequiredMixin, ListView):
         ol = sorted(ol, key=lambda i: i.inb.baseprice)
       elif (order == 8):
         ol = sorted(ol, key=lambda i: i.inb.saleprice)
+      elif (order == 80):
+        ol = sorted(ol, key=lambda i: i.inb.tprice)
       elif (order == 9):
         ol = sorted(ol, key=lambda i: i.inb.date)
       elif (order == 10):
-        pass
+        ol = sorted(ol, key=lambda i: i.inb.ktype)
       elif (order == 11):
         ol = sorted(ol, key=lambda i: i.status)
       if (order_by < 0):
@@ -215,7 +237,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
     context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
-    context['dummy'] = '按月打印入库单？导出到csv，链接X2，当月入库出库页面（上个月？）'
+    context['dummy'] = '按月打印入库单？导出到csv'
     return context
     
 class StoreDetailView(LoginRequiredMixin, DetailView):
@@ -238,7 +260,8 @@ class InBoundSheetView(PermissionRequiredMixin, DetailView):
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
   template_name_suffix = '_create_form'
-  fields = ['name', 'desc', 'kind', 'type', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tag']
+  fields = ['name', 'kind', 'type', 'where', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tprice', 'tweight'
+          , 'provider', 'length', 'diameter', 'ktype', 'tag']
   permission_required = 'amber.canin'
 
   def get_context_data(self, **kwargs):
@@ -312,4 +335,15 @@ def index(request):
   context['pending_outbound']  = OutBound.objects.filter(type=0)
   context['dummy'] = 'testing'
   return render(request, 'amber/index.html', context)
+  
+@login_required()
+def print_stores(request):
+  context = {}
+  context['now'] = timezone.now()
+  ll = str(request.GET.get('items')).split('_')[:-1]
+  ll = [ int(x) for x in ll ]
+  context['dummy'] = ll
+  context['ol'] = Store.objects.filter(id__in=ll)
+  context['can_viewbase'] = request.user.has_perm('amber.viewbase')
+  return render(request, 'amber/print_stores.html', context)
 

@@ -39,6 +39,7 @@ urlpatterns = [
     path('inbound_create/',         InBoundCreateView.as_view(),  name='inbound_create'),
     path('store/<store_id>/upload', StoreImageView.as_view(),     name='store_image'),
     path('store/<store_id>/out',    OutBoundCreateView.as_view(), name='outbound_create'),
+    path('print_stores/',           views.print_stores,           name='print_store_list'),
     
     path('login/',                  auth_views.LoginView.as_view(),                               name='login'),
     path('logout/',                 auth_views.LogoutView.as_view(),                              name='logout'),

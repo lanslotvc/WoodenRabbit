@@ -92,24 +92,33 @@ class InBound(models.Model):
                     ("viewbase", "WR: Can access base price"),
                   )
 
-  kind_choice = ((0, '有机宝石'), (1, '无机宝石'), (2, '贵重金属'), (3, '贵重宝石'), (999, '其他'))
-  type_choice = ((0, '成品'), (1, '原石'), (2, 'K金配件'), (3, '金链'), (4, '自有产品'), (999, '客带'))
+  kind_choice = ((0, '珍珠'), (1, '翡翠'), (2, '白玉'), (3, '彩宝'), (4, '钻石'), (5, '文玩'), (6, '素金'), (7, '古董珠宝'), (8, '瓷器'), (999, '其他'))
+  type_choice = ((0, '成品'), (1, '原石'), (2, '裸链'), (3, 'K金配件'), (4, '客带'), (5, '手工配件'), (999, '其他'))
+  where_choice = ((0, '冬君'), (1, '店面'), (2, '设计师'), (3, '其他'))
+  ktype_choice = ((0, '18K红'), (1, '18K黄'), (2, '18K白'), (3, 'PT950'), (4, 'PT900'), (5, 'PT850'), (6, '14K红'), (7, '14K黄')
+                , (8, '14K白'), (9, '10K黄'), (10, '10K白'), (11, '24K'), (12, '925银'), (999, '其他'), (9999, '不适用'))
   
   name = models.CharField('名称', max_length=64)
-  desc = models.CharField('细别', max_length=128)
   kind = models.IntegerField('类别', default=999, choices=kind_choice)
-  type = models.IntegerField('库存类型', default=1, choices=type_choice)
+  type = models.IntegerField('库存类型', default=0, choices=type_choice)
+  where = models.IntegerField('库号', default=0, choices=where_choice)
   
   quantity = models.IntegerField('数量', default=0)
   qunit = models.CharField('数量单位', max_length=16, blank=True, null=True)
   weight = models.IntegerField('重量', default=0)
   wunit = models.CharField('重量单位', max_length=16, blank=True, null=True)
-  baseprice = models.IntegerField('成本', default=0)
+  baseprice = models.IntegerField('单价', default=0)
   saleprice = models.IntegerField('售价', default=0)
   tweight = models.IntegerField('总重', default=0)
   tprice = models.IntegerField('总价', default=0)
+  
+  provider = models.CharField('供应商', max_length=128, blank=True, null=True)
   date = models.DateTimeField('入库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
+  
+  length = models.CharField('长度', max_length=64, blank=True, null=True)
+  diameter = models.CharField('直径度', max_length=64, blank=True, null=True)
+  ktype = models.IntegerField('K金类别', default=9999, choices=ktype_choice)
 
   tag = models.TextField('备注', blank=True, null=True)
 

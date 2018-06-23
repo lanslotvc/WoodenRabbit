@@ -25,11 +25,34 @@
 </div>
 <div class="xfull">
   <ul class="toplinks">
+    <li>入库月份</li>
+    <li><a href="?date__month=1">{% if m == 1 %} > {% endif %} 1 {% if m == 1 %} < {% endif %}</a></li>
+    <li><a href="?date__month=2">{% if m == 2 %} > {% endif %} 2 {% if m == 2 %} < {% endif %}</a></li>
+    <li><a href="?date__month=4">{% if m == 3 %} > {% endif %} 3 {% if m == 3 %} < {% endif %}</a></li>
+    <li><a href="?date__month=4">{% if m == 4 %} > {% endif %} 4 {% if m == 4 %} < {% endif %}</a></li>
+    <li><a href="?date__month=5">{% if m == 5 %} > {% endif %} 5 {% if m == 5 %} < {% endif %}</a></li>
+    <li><a href="?date__month=6">{% if m == 6 %} > {% endif %} 6 {% if m == 6 %} < {% endif %}</a></li>
+    <li><a href="?date__month=7">{% if m == 7 %} > {% endif %} 7 {% if m == 7 %} < {% endif %}</a></li>
+    <li><a href="?date__month=8">{% if m == 8 %} > {% endif %} 8 {% if m == 8 %} < {% endif %}</a></li>
+    <li><a href="?date__month=9">{% if m == 9 %} > {% endif %} 9 {% if m == 9 %} < {% endif %}</a></li>
+    <li><a href="?date__month=10">{% if m == 10 %} > {% endif %} 10 {% if m == 10 %} < {% endif %}</a></li>
+    <li><a href="?date__month=11">{% if m == 11 %} > {% endif %} 11 {% if m == 11 %} < {% endif %}</a></li>
+    <li><a href="?date__month=12">{% if m == 12 %} > {% endif %} 12 {% if m == 12 %} < {% endif %}</a></li>
+    <li><a href="?date__month=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
     <li>类别</li>
-    <li><a href="?{{ get_str }}&kind=0">{% if k == 0 %} > {% endif %} 有机宝石 {% if k == 0 %} < {% endif %} </a></li>
-    <li><a href="?{{ get_str }}&kind=1">{% if k == 1 %} > {% endif %} 无机宝石 {% if k == 1 %} < {% endif %} </a></li>
-    <li><a href="?{{ get_str }}&kind=2">{% if k == 2 %} > {% endif %} 贵重金属 {% if k == 2 %} < {% endif %} </a></li>
-    <li><a href="?{{ get_str }}&kind=3">{% if k == 3 %} > {% endif %} 贵重宝石 {% if k == 3 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=0">{% if k == 0 %} > {% endif %} 珍珠 {% if k == 0 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=1">{% if k == 1 %} > {% endif %} 翡翠 {% if k == 1 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=2">{% if k == 2 %} > {% endif %} 白玉 {% if k == 2 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=3">{% if k == 3 %} > {% endif %} 彩宝 {% if k == 3 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=4">{% if k == 4 %} > {% endif %} 钻石 {% if k == 4 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=5">{% if k == 5 %} > {% endif %} 文玩 {% if k == 5 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=6">{% if k == 6 %} > {% endif %} 素金 {% if k == 6 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=7">{% if k == 7 %} > {% endif %} 古董珠宝 {% if k == 7 %} < {% endif %} </a></li>
+    <li><a href="?{{ get_str }}&kind=8">{% if k == 8 %} > {% endif %} 瓷器 {% if k == 8 %} < {% endif %} </a></li>
     <li><a href="?{{ get_str }}&kind=999">{% if k == 999 %} > {% endif %} 其他 {% if k == 999 %} < {% endif %} </a></li>
     <li><a href="?{{ get_str }}&kind=C">全部</a></li>
   </ul><br class="clear" />
@@ -38,9 +61,12 @@
   <ul class="toplinks">
     <li>库存类型</li>
     <li><a href="?{{ get_str }}&type=0">{% if t == 0 %} > {% endif %} 成品 {% if t == 0 %} < {% endif %}</a></li>
-    <li><a href="?{{ get_str }}&type=1">{% if t == 1 %} > {% endif %} 原材料 {% if t == 1 %} < {% endif %}</a></li>
-    <li><a href="?{{ get_str }}&type=2">{% if t == 2 %} > {% endif %} 配件 {% if t == 2 %} < {% endif %}</a></li>
-    <li><a href="?{{ get_str }}&type=3">{% if t == 3 %} > {% endif %} 客带 {% if t == 3 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=1">{% if t == 1 %} > {% endif %} 原石 {% if t == 1 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=2">{% if t == 2 %} > {% endif %} 裸链 {% if t == 2 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=3">{% if t == 3 %} > {% endif %} K金配件 {% if t == 3 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=4">{% if t == 4 %} > {% endif %} 客带 {% if t == 4 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=5">{% if t == 5 %} > {% endif %} 手工配件 {% if t == 5 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&type=999">{% if t == 999 %} > {% endif %} 其他 {% if t == 999 %} < {% endif %}</a></li>
     <li><a href="?{{ get_str }}&type=C">全部</a></li>
   </ul><br class="clear" />
 </div>
@@ -51,6 +77,35 @@
     <li><a href="?by={{ by }}">{% if b == by %} > {% endif %} {{ by }} {% if b == by %} < {% endif %}</a></li>
   {% endfor %}
     <li><a href="?by=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>供应商</li>
+  {% for pr in prlist %}
+    <li><a href="?pr={{ pr }}">{% if p == pr %} > {% endif %} {{ pr }} {% if p == pr %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?pr=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>K金类别</li>
+    <li><a href="?{{ get_str }}&ktype=0">{% if kt == 0 %} > {% endif %} 18K红 {% if kt == 0 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=1">{% if kt == 1 %} > {% endif %} 18K黄 {% if kt == 1 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=2">{% if kt == 2 %} > {% endif %} 18K白 {% if kt == 2 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=3">{% if kt == 3 %} > {% endif %} PT950 {% if kt == 3 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=4">{% if kt == 4 %} > {% endif %} PT900 {% if kt == 4 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=5">{% if kt == 5 %} > {% endif %} PT850 {% if kt == 5 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=6">{% if kt == 6 %} > {% endif %} 14K红 {% if kt == 6 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=7">{% if kt == 7 %} > {% endif %} 14K黄 {% if kt == 7 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=8">{% if kt == 8 %} > {% endif %} 14K白 {% if kt == 8 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=9">{% if kt == 9 %} > {% endif %} 10K黄 {% if kt == 9 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=10">{% if kt == 10 %} > {% endif %} 10K白 {% if kt == 10 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=11">{% if kt == 11 %} > {% endif %} 24K {% if kt == 11 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=12">{% if kt == 12 %} > {% endif %} 925银 {% if kt == 12 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=999">{% if kt == 999 %} > {% endif %} 其他 {% if kt == 999 %} < {% endif %}</a></li>
+    <li><a href="?{{ get_str }}&ktype=C">全部</a></li>
   </ul><br class="clear" />
 </div>
 <div class="xfull">
@@ -69,14 +124,20 @@
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">名称</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">类别</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">库存类型</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 40 %}-40{% else %}40{% endif %}">库号</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 5 %}-5{% else %}5{% endif %}">剩余</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">单位</div><div class="clear"></div></th>
       {% if can_viewbase %}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 7 %}-7{% else %}7{% endif %}">成本</a></div><div class="clear"></div></th>
       {% endif %}
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 8 %}-8{% else %}8{% endif %}">售价</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 80 %}-80{% else %}80{% endif %}">总价</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 9 %}-9{% else %}9{% endif %}">入库日期</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">供应商</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">长度</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">直径</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 10 %}-10{% else %}10{% endif %}">K金类别</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 11 %}-11{% else %}10{% endif %}">库存状态</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text">操作</div><div class="clear"></div></th>
     </tr>
@@ -86,14 +147,20 @@
       <td>{{ store.inb.name  }}</td>
       <td>{{ store.inb.get_kind_display }}</td>
       <td>{{ store.inb.get_type_display }}</td>
+      <td>{{ store.inb.get_where_display }}</td>
       <td>{{ store.remains }}</td>
       <td>{{ store.inb.qunit }}</td>
       {% if can_viewbase %}
       <td>{{ store.inb.baseprice }}</td>
       {% endif %}
       <td>{{ store.final_price }}</td>
+      <td>{{ store.inb.tprice }}</td>
       <td>{{ store.inb.date }}</td>
       <td>{{ store.inb.by }}</td>
+      <td>{{ store.inb.provider }}</td>
+      <td>{{ store.inb.length }}</td>
+      <td>{{ store.inb.diameter }}</td>
+      <td>{{ store.inb.get_ktype_display }}</td>
       <td>{{ store.get_status_display }}</td>
       <td>
         {% if can_in %}<a href="{% url 'amber:inbound' store.inb.id %}" target="_blank">打印入库单</a>{% endif %}
@@ -112,6 +179,9 @@
   <span><a href="{% url 'amber:inbound_create' %}">入库</a></span>
 </div>
 {% endif %}
+<div class="modify">
+  <span><a href="{% url 'amber:print_store_list' %}?items={% for store in object_list %}{{ store.id }}_{% endfor %}" target="_blank">打印当前</a></span>
+</div>
 {% endblock %}
 
 

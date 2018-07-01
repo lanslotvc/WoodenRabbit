@@ -1,16 +1,35 @@
-﻿<h3>{{ inbound }}</h5>
-<table border=1>
-    <tr><td>{{ inbound.name }}</td></tr>
-    <tr><td>{{ inbound.desc }}</td></tr>
-    <tr><td>{{ inbound.get_kind_display }}</td></tr>
-    <tr><td>{{ inbound.get_type_display }}</td></tr>
-    <tr><td>{{ inbound.quantity }}</td></tr>
-    <tr><td>{{ inbound.qunit }}</td></tr>
-    <tr><td>{{ inbound.weight }}</td></tr>
-    <tr><td>{{ inbound.wunit }}</td></tr>
-    <tr><td>{{ inbound.baseprice }}</td></tr>
-    <tr><td>{{ inbound.saleprice }}</td></tr>
-    <tr><td>{{ inbound.date }}</td></tr>
-    <tr><td>{{ inbound.by }}</td></tr>
-    <tr><td>{{ inbound.tag }}</td></tr>
+﻿<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
+<table border=1 width=100% cellspacing="0">
+  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ inbound }}</td><tr>
+  <tr>
+    <td width=10%>名称：</td><td width=15%>{{ inbound.name }}</td>
+    <td width=10%>类别：</td><td width=15%>{{ inbound.get_kind_display }}</td>
+    <td width=10%>库存类型：</td><td width=15%>{{ inbound.get_type_display }}</td>
+    <td width=10%>库号：</td><td width=15%>{{ inbound.get_where_display }}</td>
+  </tr>
+  <tr>
+    <td>数量：</td><td colspan=3>{{ inbound.quantity }} {{ inbound.qunit }}</td>
+    <td>重量：</td><td colspan=3>{{ inbound.weight }} {{ inbound.wunit }}</td>
+  </tr>
+  <tr>
+    <td>售价：</td><td colspan=2>{{ inbound.saleprice }}</td>
+    <td>总价：</td><td colspan=2>{{ inbound.tprice }}</td>
+    <td>单价：</td><td>{{ inbound.baseprice }}</td>
+  </tr>
+{% if inbound.ktype != 9999 %}
+  <tr>
+    <td>长度：</td><td colspan=2>{{ inbound.length }}</td>
+    <td>直径度：</td><td colspan=2>{{ inbound.diameter }}</td>
+    <td>K金类别：</td><td>{{ inbound.get_ktype_display }}</td>
+  </tr>
+{% endif %}
+  <tr>
+    <td>入库日期：</td><td colspan=3>{{ inbound.date }}</td>
+    <td>经手人：</td><td colspan=3>{{ inbound.by }}</td>
+  </tr>
+  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ inbound.tag }}</td></tr>
 </table>
+

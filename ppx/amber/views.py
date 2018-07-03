@@ -237,7 +237,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
     context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
-    context['dummy'] = '按月打印入库单？导出到csv'
+    context['dummy'] = '导出到csv'
     return context
     
 class StoreDetailView(LoginRequiredMixin, DetailView):
@@ -295,7 +295,7 @@ class StoreImageView(PermissionRequiredMixin, CreateView):
 class OutBoundCreateView(PermissionRequiredMixin, CreateView):
   model = OutBound
   template_name_suffix = '_create_form'
-  fields = ['quantity']
+  fields = ['quantity', 'price', 'people', 'payment', 'cost', 'producer', 'type', 'tag']
   permission_required = 'amber.canout'
 
   def get_context_data(self, **kwargs):

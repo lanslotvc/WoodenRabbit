@@ -154,30 +154,49 @@ class StoreImage(models.Model):
   
   def get_absolute_url(self):
     return reverse('amber:store', kwargs={'pk': self.store.pk})
-    
+
+class CraftSheet(models.Model):
+  pass
+
 class OutBound(models.Model):
   class Meta:
     permissions = (
                     ("canout", "WR: Can operate on outbound sheet"),
                   )
 
-  type_choice = ((0, '未限定'), (1, '销售单'), (2, '生产单'))
+  type_choice = ((0, '未限定'), (1, '销售'), (2, '生产'))
+  pay_choice = ((0, '现金'), (1, '信用卡'), (2, '支付宝'), (3, '微信'), (9, '其他'))
+  rec_choice = ((0, '否'), (1, '是'))
   
   store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
   quantity = models.IntegerField('数量', default=0)
   date = models.DateTimeField('出库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
   price = models.IntegerField('售价', default=0)
+  member = models.ForeignKey(Member, models.SET_NULL, blank=True, null=True)
+  people = models.CharField('客户名', max_length=128, blank=True, null=True)
+  payment = models.IntegerField('付款方式', default=0, choices=pay_choice)
+  cost = models.IntegerField('生产费用', default=0)
+  producer = models.CharField('制作商', max_length=128, blank=True, null=True)
+  tag = models.TextField('备注', blank=True, null=True)
+
+  recraft = models.IntegerField('是否重新制作', default=0, choices=rec_choice)
   type = models.IntegerField('出库类型', default=0, choices=type_choice)
+  craft = models.ForeignKey(CraftSheet, models.SET_NULL, blank=True, null=True)
 
   def __str__(self):
-    return '出库单_' + str(self.id)
+    ret = ''
+    if self.type == 0:
+      ret = '出库单_'
+    elif self.type == 1:
+      ret = '销售单_'
+    elif self.type == 2:
+      ret = '生产单_'
+    return ret + str(self.id)
   def get_absolute_url(self):
     return reverse('amber:store', kwargs={'pk': self.store.pk})
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+

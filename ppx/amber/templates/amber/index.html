@@ -20,25 +20,26 @@
         <tr><td>
           <select name="outbounds" id="id_outbounds" multiple="multiple" class="selectfilter" data-field-name="进行中的出库单" data-is-stacked="0">
           {% for ob in pending_outbound %}
-            <option value="{{ ob.id }}">{{ ob }}: {{ ob.store.inb.name }} - ({{ ob.store.inb.desc }}) - {{ ob.quantity }}({{ ob.store.inb.qunit }})</option>
+            <option value="{{ ob.id }}">{{ ob }}: {{ ob.store.inb.name }} - {{ ob.quantity }}({{ ob.store.inb.qunit }})</option>
           {% endfor %}
           </select>
         </td></tr>
         <tr><td>
-          <input id="go_craft" type="button" value="生产单" />
-          <input id="go_sale"  type="button" value="销售单" />
+          <input id="go_craft"  type="button" value="生产单" />
+          <input id="go_return" type="button" value="退回" />
         </td></tr>
       </table>
     </form>
     <script>
         var f = document.getElementById('pending_outbound');
-        var go_craft = document.getElementById('go_craft');
-        var go_sale  = document.getElementById('go_sale');
+        var go_craft  = document.getElementById('go_craft');
+        var go_return = document.getElementById('go_return');
+        
         go_craft.onclick = function() {
             alert('生产单~~~~~');
         }
-        go_sale.onclick = function() {
-            alert('销售单~~~~~');
+        go_return.onclick = function() {
+            alert('退回~~~~~');
         }
     </script>
   </div>

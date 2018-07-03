@@ -1,51 +1,109 @@
 ﻿{% extends "amber/base.html" %}
 
+<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
 {% block content %}
-<h5>{{ store }} - {{ now }}</h5>
-<ul>
-    <li>{{ store }}</li>
-    <li>{{ store.inb.name }}</li>
-    <li>{{ store.inb.get_kind_display }}</li>
-    <li>{{ store.inb.get_type_display }}</li>
-    <li>{{ store.inb.get_where_display }}</li>
-    <li>{{ store.inb.quantity }}</li>
-    <li>{{ store.inb.qunit }}</li>
-    <li>{{ store.inb.weight }}</li>
-    <li>{{ store.inb.wunit }}</li>
-  {% if can_viewbase %}  
-    <li>{{ store.inb.baseprice }}</li>
+<table border=1 width=100% cellspacing="0">
+  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ store }}</td></tr>
+  <tr>
+    <td width=10%>名称：</td><td width=15%>{{ store.inb.name }}</td>
+    <td width=10%>类别：</td><td width=15%>{{ store.inb.get_kind_display }}</td>
+    <td width=10%>库存类型：</td><td width=15%>{{ store.inb.get_type_display }}</td>
+    <td width=10%>库号：</td><td width=15%>{{ store.inb.get_where_display }}</td>
+  </tr>
+  <tr>
+    <td>数量：</td><td colspan=2>{{ store.inb.quantity }} {{ store.inb.qunit }}</td>
+    <td>重量：</td><td colspan=2>{{ store.inb.weight }} {{ store.inb.wunit }}</td>
+    <td>总重：</td><td>{{ store.inb.tweight }}</td>
+  </tr>
+{% if can_viewbase %}
+  <tr>
+    <td>售价：</td><td colspan=2>{{ store.inb.saleprice }}</td>
+    <td>总价：</td><td colspan=2>{{ store.inb.tprice }}</td>
+    <td>单价：</td><td>{{ store.inb.baseprice }}</td>
+  </tr>
+{% else %}
+  <tr>
+    <td>售价：</td><td colspan=3>{{ store.inb.saleprice }}</td>
+    <td>总价：</td><td colspan=3>{{ store.inb.tprice }}</td>
+  </tr>
+{% endif %}
+{% if store.inb.ktype != 9999 %}
+  <tr>
+    <td>长度：</td><td colspan=2>{{ store.inb.length }}</td>
+    <td>直径度：</td><td colspan=2>{{ store.inb.diameter }}</td>
+    <td>K金类别：</td><td>{{ store.inb.get_ktype_display }}</td>
+  </tr>
+{% endif %}
+  <tr>
+    <td>剩余：</td><td colspan=3>{{ store.remains }}</td>
+    <td>状态</td><td colspan=3>{{ store.get_status_display }}</td>
+  </tr>
+  <tr>
+    <td>折扣：</td><td colspan=2>{{ store.discount }}</td>
+    <td>特价：</td><td colspan=2>{{ store.bestsale }}</td>
+    <td>折后价：</td><td>{{ store.final_price }}</td>
+  </tr>
+  <tr>
+    <td>入库日期：</td><td colspan=2>{{ store.inb.date }}</td>
+    <td>供应商：</td><td colspan=2>{{ store.inb.provider }}</td>
+    <td>经手人：</td><td>{{ store.inb.by }}</td>
+  </tr>
+  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ store.inb.tag }} - {{ store.inb.tag }}</td></tr>
+</table>
+
+<h3>图片</h3>
+{% for img in imgs %}
+<img src="../..{{ img.image.url }}" alt="" height=120 width=90 />
+{% endfor %}
+
+<h3>出库信息</h3>
+<h4>销售</h4>
+<table border=0 width=100% cellspacing="0">
+  <tr><td width=10%></td><td>
+{% for outbound in outbounds %}
+  {% if outbound.type == 1 %}
+    <table border=1 width=100% cellspacing="0">
+      <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ outbound }}</td></tr>
+      <tr>
+        <td width=10%>付款方式：</td><td width=15%>{{ outbound.get_payment_display }}</td>
+        <td width=10%>售价：</td><td width=15%>{{ outbound.price }}</td>
+        <td width=10%>数量：</td><td width=15%>{{ outbound.quantity }}{{ outbound.store.inb.qunit }}</td>
+        <td width=10%>重制：</td><td width=15%>{{ outbound.get_recraft_display }}</td>
+      </tr>
+      <tr>
+        <td>出库日期：</td><td colspan=2>{{ outbound.date }}</td>
+        <td>客户名：</td><td colspan=2>{{ outbound.people }}</td>
+        <td>经手人：</td><td>{{ outbound.by }}</td>
+      </tr>
+      <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ outbound.tag }}</td></tr>
+    </table>
   {% endif %}
-    <li>{{ store.inb.saleprice }}</li>
-    <li>{{ store.final_price }}</li>
-    <li>{{ store.inb.tweight }}</li>
-    <li>{{ store.inb.tprice }}</li>
-    <li>{{ store.inb.provider }}</li>
-    <li>{{ store.inb.date }}</li>
-    <li>{{ store.inb.by }}</li>
-    <li>{{ store.inb.length }}</li>
-    <li>{{ store.inb.diameter }}</li>
-    <li>{{ store.inb.get_ktype_display }}</li>
-    <li>{{ store.inb.tag }}</li>
-    <li>{{ store.remains }}</li>
-    <li>{{ store.discount }}</li>
-    <li>{{ store.bestsale }}</li>
-    <li>{{ store.get_status_display }}</li>
-    <li>{{ store.tag }}</li>
-  {% for img in imgs %}
-    <li><img src="../..{{ img.image.url }}" alt="" height=120 width=90 /></li>
-  {% endfor %}
-  {% for outbound in outbounds %}
+{% endfor %}
+  </td></tr>
+</table>
+
+{% for outbound in outbounds %}
+  {% if outbound.type != 1 %}
     <li>{{ outbound }}
       <ul>
         <li>{{ outbound.quantity }}</li>
         <li>{{ outbound.date }}</li>
         <li>{{ outbound.by }}</li>
         <li>{{ outbound.price }}</li>
-        <li>{{ outbound.type }}</li>
+        <li>{{ outbound.get_type_display }}</li>
+        <li>{{ outbound.people }}</li>
+        <li>{{ outbound.get_payment_display }}</li>
+        <li>{{ outbound.cost }}</li>
+        <li>{{ outbound.producer }}</li>
+        <li>{{ outbound.get_recraft_display }}</li>
+        <li>{{ outbound.tag }}</li>
       </ul>
     </li>
-  {% endfor %}
-</ul>
+  {% endif %}
+{% endfor %}
 
 {% if can_in %}
 <div class="modify">
@@ -53,11 +111,6 @@
 </div>  
 {% endif %}
 
-{% if user.is_superuser %}
-<div class="modify">
-  <a href="" >修改</a>
-</div>  
-{% endif %}
 
 {% if can_out and store.status == 0 %}
 <div class="modify" float="right">

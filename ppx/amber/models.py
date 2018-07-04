@@ -32,8 +32,8 @@ class Member(models.Model):
   phone = models.IntegerField('座机', default=0)
   address = models.TextField('地址')
   gender = models.IntegerField('性别', default=0, choices=gender_choice)
-  join_date = models.DateTimeField('加入会员日期', default=timezone.now)
-  birthday = models.DateTimeField('生日')
+  join_date = models.DateField('加入会员日期', default=timezone.now)
+  birthday = models.DateField('生日')
   accumulates = models.IntegerField('累积消费', default=0)
   ds_acc = models.IntegerField('下线累积消费', default=0)
   n_purchase_orders = models.IntegerField('累积销售订单', default=0)
@@ -113,7 +113,7 @@ class InBound(models.Model):
   tprice = models.IntegerField('总价', default=0)
   
   provider = models.CharField('供应商', max_length=128, blank=True, null=True)
-  date = models.DateTimeField('入库日期', default=timezone.now)
+  date = models.DateField('入库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
   
   length = models.CharField('长度', max_length=64, blank=True, null=True)
@@ -156,8 +156,21 @@ class StoreImage(models.Model):
     return reverse('amber:store', kwargs={'pk': self.store.pk})
 
 class CraftSheet(models.Model):
-  pass
+  cdate = models.DateField('订制日期', default=timezone.now)
+  ddate = models.DateField('设计日期', default=timezone.now, blank=True, null=True)
+  sdate = models.DateField('送厂日期', default=timezone.now, blank=True, null=True)
+  edate = models.DateField('预计完成日期', default=timezone.now, blank=True, null=True)
+  adate = models.DateField('实际完成日期', default=timezone.now, blank=True, null=True)
+  producer = models.CharField('制作方', max_length=128, blank=True, null=True)
+  by = models.CharField('经手人', max_length=128)
+  desc = models.TextField('制作描述', blank=True, null=True)
+  tag = models.TextField('备注', blank=True, null=True)
 
+  def get_absolute_url(self):
+    return reverse('amber:craft_list')
+  def __str__(self):
+    return '生产单_' + str(self.id)
+    
 class OutBound(models.Model):
   class Meta:
     permissions = (
@@ -170,7 +183,7 @@ class OutBound(models.Model):
   
   store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
   quantity = models.IntegerField('数量', default=0)
-  date = models.DateTimeField('出库日期', default=timezone.now)
+  date = models.DateField('出库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)
   price = models.IntegerField('售价', default=0)
   member = models.ForeignKey(Member, models.SET_NULL, blank=True, null=True)

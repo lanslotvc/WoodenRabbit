@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'amber/style.css' %}" />
+    
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+</head>
+
+<body class="app-amber model-member change-list">
+    <div id="content">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+</html>

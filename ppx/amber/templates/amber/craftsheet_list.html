@@ -1,0 +1,58 @@
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<h3>生产单 = {{ now }} -- {{ dummy }}</h3>
+
+<div id="toolbar">
+  <form id="changelist-search" method="get">
+    <div><!-- DIV needed for valid HTML -->
+      <label for="searchbar"><img src="/static/admin/img/search.svg" alt="Search" /></label>
+      <input type="text" size="40" name="q" value="" id="searchbar" autofocus />
+      <input type="submit" value="搜索" />
+      {% if q %}<a href="?">全部</a>{% endif %}
+    </div>
+  </form>
+</div>
+
+<div class="xfull">
+  <ul class="toplinks">
+    <li>经手人</li>
+  {% for by in bylist %}
+    <li><a href="?by={{ by }}">{% if b == by %} > {% endif %} {{ by }} {% if b == by %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?by=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>制作方</li>
+  {% for pr in prlist %}
+    <li><a href="?pr={{ pr }}">{% if p == pr %} > {% endif %} {{ pr }} {% if p == pr %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?pr=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+
+<div class="results">
+<table>
+    <tr>
+    </tr>
+{% for craft in object_list %}
+    <tr>
+      <td><a href="{% url 'amber:craft' craft.id %}">{{ craft }}</a></td>
+    </tr>
+{% empty %}
+    <tr><td colspan=4>啥都没有？</td></tr>
+{% endfor %}
+</table>
+</div>
+
+
+<div class="modify">
+  <span><a href="{% url 'amber:print_craft_list' %}?items={% for craft in object_list %}{{ craft.id }}_{% endfor %}" target="_blank">打印当前</a></span>
+</div>
+{% endblock %}
+
+
+
+

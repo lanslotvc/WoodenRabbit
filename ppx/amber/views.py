@@ -41,7 +41,7 @@ class MemberListView(LoginRequiredMixin, ListView):
         if (q in m.name) or (q in m.wechat) or (q in m.email) or (q in str(m.mobile)) or (q in str(m.phone)) or (q in m.address) or (q in str(m.birthday)) or (q in m.tag):
           l.append(m)
       ol = l
-      context['q'] = 1
+      context['q'] = l
     # filter
     if (join_date__year):
       ol = [ x for x in ol if x.join_date.year == int(join_date__year) ]
@@ -165,7 +165,7 @@ class StoreListView(LoginRequiredMixin, ListView):
         if (q in i.inb.name) or (q in i.inb) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
           l.append(i)
       ol = l
-      context['q'] = 1
+      context['q'] = l
     # filter
     if (date__year):
       ol = [ x for x in ol if x.inb.date.year == int(date__year) ]
@@ -264,11 +264,6 @@ class InBoundCreateView(PermissionRequiredMixin, CreateView):
           , 'provider', 'length', 'diameter', 'ktype', 'tag']
   permission_required = 'amber.canin'
 
-  def get_context_data(self, **kwargs):
-    context = super(InBoundCreateView, self).get_context_data(**kwargs)
-    context['store_list'] = Store.objects.all()
-    return context
-
   def form_valid(self, form):
     obj = form.save(commit = False)
     obj.by = str(self.request.user)
@@ -305,11 +300,19 @@ class OutBoundCreateView(PermissionRequiredMixin, CreateView):
 
   def form_valid(self, form):
     obj = form.save(commit = False)
-    #stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
     obj.store = Store.objects.filter(id=self.kwargs['store_id'])[0]
     obj.by = str(self.request.user)
     obj.price = obj.store.final_price()
     obj.store.remains = obj.store.remains - obj.quantity
+    try:
+      m = int(obj.people)
+      ml = Member.objects.filter(mobile=m)
+      if (len(ml)):
+        obj.member = ml[0]
+        obj.people = str(obj.member)
+    except ValueError:
+      pass
+    
     if (obj.store.remains == 0):
       obj.store.status = 1
     obj.store.save()
@@ -320,6 +323,79 @@ class OutBoundCreateView(PermissionRequiredMixin, CreateView):
     obj2.save()
     '''
     return super(OutBoundCreateView, self).form_valid(form)
+
+# Craft ==================================================================================
+class CraftCreateView(PermissionRequiredMixin, CreateView):
+  model = CraftSheet
+  template_name_suffix = '_create_form'
+  fields = ['edate', 'desc', 'producer', 'tag']
+  permission_required = 'amber.canout'
+
+  def form_valid(self, form):
+    #stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
+    obj = form.save(commit = False)
+    obj.by = str(self.request.user)
+    obj.tag = self.request.GET.getlist('outbounds')
+    obj.save()
+    return super(CraftCreateView, self).form_valid(form)
+    
+class CraftDetailView(LoginRequiredMixin, DetailView):
+  model = CraftSheet
+  def get_context_data(self, **kwargs):
+    context = super(CraftDetailView, self).get_context_data(**kwargs)
+    craft = context['craftsheet']
+    context['outbounds'] = OutBound.objects.filter(craft=craft.id)
+    context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
+    context['now'] = timezone.now()
+    return context
+
+class CraftListView(LoginRequiredMixin, ListView):
+  model = CraftSheet
+
+  def get_context_data(self, **kwargs):
+    context = super(CraftListView, self).get_context_data(**kwargs)
+
+    context['ylist'] = list(set([ x.cdate.year for x in context['object_list']]))
+    context['bylist'] = list(set([ x.by for x in context['object_list']]))
+    ol = context['object_list']
+    date__year = self.request.GET.get('date__year')
+    date__year = None if date__year == 'C' else date__year
+    date__month = self.request.GET.get('date__month')
+    date__month = None if date__month == 'C' else date__month
+    by = self.request.GET.get('by')
+    by = None if by == 'C' else by
+    order_by = self.request.GET.get('o')
+    q = self.request.GET.get('q')
+    context['get_str'] = ''
+    # query
+
+    # filter
+    if (date__year):
+      ol = [ x for x in ol if x.cdate.year == int(date__year) ]
+      context['get_str'] += ('&date__year=' + date__year)
+      context['y'] = int(date__year)
+    if (date__month):
+      ol = [ x for x in ol if x.cdate.month == int(date__month) ]
+      context['get_str'] += ('&date__month=' + date__month)
+      context['m'] = int(date__month)
+    # order
+    if (order_by):
+      order_by = int(order_by)
+      order = abs(order_by)
+      if (order == 1):
+        pass
+      if (order_by < 0):
+        ol.reverse()
+      context['order_by'] = order_by
+    context['object_list'] = ol
+    context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
+    context['now'] = timezone.now()
+    context['dummy'] = '导出到csv'
+    return context
 
 # Create your views here.
 @login_required()
@@ -337,6 +413,20 @@ def index(request):
   return render(request, 'amber/index.html', context)
   
 @login_required()
+def return_outbound(request):
+  context = {}
+  context['now'] = timezone.now()
+  group = 'none'
+  if (len(request.user.groups.all()) > 0):
+    group = str(request.user.groups.all()[0]).lower()
+  context['is_group_finance']  = group == 'finance'
+  context['is_group_designer'] = group == 'designer'
+  context['is_group_sales']    = group == 'sales'
+  context['pending_outbound']  = OutBound.objects.filter(type=0)
+  context['dummy'] = 'return_outbound'
+  return render(request, 'amber/index.html', context)
+
+@login_required()
 def print_stores(request):
   context = {}
   context['now'] = timezone.now()
@@ -347,3 +437,13 @@ def print_stores(request):
   context['can_viewbase'] = request.user.has_perm('amber.viewbase')
   return render(request, 'amber/print_stores.html', context)
 
+@login_required()
+def print_crafts(request):
+  context = {}
+  context['now'] = timezone.now()
+  ll = str(request.GET.get('items')).split('_')[:-1]
+  ll = [ int(x) for x in ll ]
+  context['dummy'] = ll
+  context['ol'] = CraftSheet.objects.filter(id__in=ll)
+  context['can_viewbase'] = request.user.has_perm('amber.viewbase')
+  return render(request, 'amber/print_crafts.html', context)

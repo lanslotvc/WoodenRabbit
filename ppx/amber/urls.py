@@ -22,7 +22,7 @@ from . import views
 from .views import ContactView
 from .views import MemberListView, MemberDetailView, MemberCreateView, MemberUpdateView
 from .views import StoreListView, InBoundCreateView, StoreDetailView, StoreImageView, InBoundSheetView
-from .views import OutBoundCreateView
+from .views import OutBoundCreateView, CraftCreateView, CraftListView, CraftDetailView
 
 app_name = 'amber'
 urlpatterns = [
@@ -40,6 +40,12 @@ urlpatterns = [
     path('store/<store_id>/upload', StoreImageView.as_view(),     name='store_image'),
     path('store/<store_id>/out',    OutBoundCreateView.as_view(), name='outbound_create'),
     path('print_stores/',           views.print_stores,           name='print_store_list'),
+    
+    path('craft_list/',             CraftListView.as_view(),      name='craft_list'),
+    path('craft/<pk>/',             CraftDetailView.as_view(),    name='craft'),
+    path('craft_create/',           CraftCreateView.as_view(),    name='craft_create'),
+    path('return_outbound/',        views.return_outbound,        name='return_outbound'),
+    path('print_crafts/',           views.print_crafts,           name='print_craft_list'),
     
     path('login/',                  auth_views.LoginView.as_view(),                               name='login'),
     path('logout/',                 auth_views.LogoutView.as_view(),                              name='logout'),

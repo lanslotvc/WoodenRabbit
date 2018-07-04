@@ -15,10 +15,11 @@
 <div>
   {% if pending_outbound %}
   <div>
-    <form id="pending_outbound" action="" method="post">
+    <h3>进行中的出库单</h3>
+    <form id="pending_outbound" action="" method="post">{% csrf_token %}
       <table>
         <tr><td>
-          <select name="outbounds" id="id_outbounds" multiple="multiple" class="selectfilter" data-field-name="进行中的出库单" data-is-stacked="0">
+          <select name="outbounds" id="id_outbounds" multiple="multiple">
           {% for ob in pending_outbound %}
             <option value="{{ ob.id }}">{{ ob }}: {{ ob.store.inb.name }} - {{ ob.quantity }}({{ ob.store.inb.qunit }})</option>
           {% endfor %}
@@ -36,10 +37,41 @@
         var go_return = document.getElementById('go_return');
         
         go_craft.onclick = function() {
-            alert('生产单~~~~~');
+            var s = document.getElementById('id_outbounds');
+            var options = s && s.options;
+            var opt;
+            var valid = false;
+            for (var i = 0, iLen = options.length; i < iLen; i++) {
+              opt = options[i];
+              if (opt.selected) {
+                valid = true;
+              }
+            }
+            if (!valid) {
+              alert('至少选一个吧。。。');
+            } else {
+              f.action = "{% url 'amber:craft_create' %}"
+              f.method = "get";
+              f.submit();
+            }
         }
         go_return.onclick = function() {
-            alert('退回~~~~~');
+            var s = document.getElementById('id_outbounds');
+            var options = s && s.options;
+            var opt;
+            var valid = 0;
+            for (var i = 0, iLen = options.length; i < iLen; i++) {
+              opt = options[i];
+              if (opt.selected) {
+                valid += 1;
+              }
+            }
+            if (valid > 1) {
+              alert('一个一个退。。。');
+            } else {
+              f.action = "{% url 'amber:return_outbound' %}"
+              f.submit();
+            }
         }
     </script>
   </div>

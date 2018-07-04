@@ -1,0 +1,22 @@
+﻿{% extends "amber/base.html" %}
+
+<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
+{% block content %}
+<table border=1 width=100% cellspacing="0">
+  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ craft }}</td></tr>
+  <tr>
+    <td width=10%>1</td><td width=15%>2</td>
+    <td width=10%>3</td><td width=15%>4</td>
+    <td width=10%>5</td><td width=15%>6</td>
+    <td width=10%>7</td><td width=15%>8</td>
+  </tr>
+  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ craft.tag }}</td></tr>
+</table>
+
+<div class="modify">
+  <a href="{% url 'amber:craft_list' %}" >返回</a>
+</div>
+{% endblock %}

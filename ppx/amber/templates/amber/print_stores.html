@@ -4,6 +4,7 @@
   table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
 </style>
 
+{% block content %}
 {% for store in ol %}
 <table border=1 width=100% cellspacing="0">
   <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ store }}</td></tr>
@@ -55,3 +56,5 @@
 </table>
 <br/>
 {% endfor %}
+
+{% endblock %}

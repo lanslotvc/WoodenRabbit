@@ -1,0 +1,43 @@
+﻿{% extends "amber/base_nh.html" %}
+
+<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
+{% block content %}
+
+<table border=1 width=100% cellspacing="0">
+    <tr>
+      <th width=10%>编号</th>
+      <th width=10%>图片</th>
+      <th width=10%>名称</th>
+      <th width=10%>类别</th>
+      <th width=10%>库号</th>
+      <th width=10%>售价（特价*）</th>
+      <th width=40%>备注</th>
+    </tr>
+{% for store in ol %}
+    <tr>
+      <td>{{ store }}</td>
+      <td>
+{% for img in imgs %}
+{% if img.store.id == store.id %}
+      <img src="..{{ img.image.url }}" alt="" height=60 width=90 />
+{% endif %}
+{% endfor %}
+      </td>
+      <td>{{ store.inb.name }}</td>
+      <td>{{ store.inb.get_kind_display }}</td>
+      <td>{{ store.inb.get_where_display }}</td>
+{% if store.discount != 100 or store.bestsale != 0 %}
+      <td>{{ store.final_price }}*</td>
+{% else %}
+      <td>{{ store.inb.saleprice }}</td>
+{% endif %}
+      <td></td>
+    </tr>
+{% endfor %}
+</table>
+
+
+{% endblock %}

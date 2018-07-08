@@ -49,7 +49,7 @@
 
 
 <div class="modify">
-  <span><a href="{% url 'amber:print_craft_list' %}?items={% for craft in object_list %}{{ craft.id }}_{% endfor %}" target="_blank">打印当前</a></span>
+  <span><a href="{% url 'amber:print_craft_list' %}?items={% for craft in object_list %}{{ craft.id }}{% if not forloop.last %}_{% endif %}{% endfor %}" target="_blank">打印当前</a></span>
 </div>
 {% endblock %}
 

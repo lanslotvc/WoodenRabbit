@@ -180,7 +180,10 @@
 </div>
 {% endif %}
 <div class="modify">
-  <span><a href="{% url 'amber:print_store_list' %}?items={% for store in object_list %}{{ store.id }}_{% endfor %}" target="_blank">打印当前</a></span>
+  <span><a href="{% url 'amber:print_store_list_lite' %}?items={% for store in object_list %}{{ store.id }}{% if not forloop.last %}_{% endif %}{% endfor %}" target="_blank">打印当前</a></span>
+</div>
+<div class="modify">
+  <span><a href="{% url 'amber:print_store_list' %}?items={% for store in object_list %}{{ store.id }}{% if not forloop.last %}_{% endif %}{% endfor %}" target="_blank">打印当前明细</a></span>
 </div>
 {% endblock %}
 

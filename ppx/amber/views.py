@@ -430,7 +430,7 @@ def return_outbound(request):
 def print_stores(request):
   context = {}
   context['now'] = timezone.now()
-  ll = str(request.GET.get('items')).split('_')[:-1]
+  ll = str(request.GET.get('items')).split('_')
   ll = [ int(x) for x in ll ]
   context['dummy'] = ll
   context['ol'] = Store.objects.filter(id__in=ll)
@@ -438,10 +438,29 @@ def print_stores(request):
   return render(request, 'amber/print_stores.html', context)
 
 @login_required()
+def print_stores_lite(request):
+  context = {}
+  context['now'] = timezone.now()
+  ll = str(request.GET.get('items')).split('_')
+  ll = [ int(x) for x in ll ]
+  context['ol'] = Store.objects.filter(id__in=ll)
+  imgs = StoreImage.objects.all()
+  all_imgs = [ x for x in imgs if x.store.id in ll ]
+  img_store_ids = []
+  single_imgs = []
+  for img in all_imgs:
+    if not (img.store.id in img_store_ids):
+      img_store_ids.append(img.store.id)
+      single_imgs.append(img)
+  context['imgs'] = single_imgs
+  context['dummy'] = context['imgs']
+  return render(request, 'amber/print_stores_lite.html', context)
+
+@login_required()
 def print_crafts(request):
   context = {}
   context['now'] = timezone.now()
-  ll = str(request.GET.get('items')).split('_')[:-1]
+  ll = str(request.GET.get('items')).split('_')
   ll = [ int(x) for x in ll ]
   context['dummy'] = ll
   context['ol'] = CraftSheet.objects.filter(id__in=ll)

@@ -40,6 +40,7 @@ urlpatterns = [
     path('store/<store_id>/upload', StoreImageView.as_view(),     name='store_image'),
     path('store/<store_id>/out',    OutBoundCreateView.as_view(), name='outbound_create'),
     path('print_stores/',           views.print_stores,           name='print_store_list'),
+    path('print_stores_lite/',      views.print_stores_lite,      name='print_store_list_lite'),
     
     path('craft_list/',             CraftListView.as_view(),      name='craft_list'),
     path('craft/<pk>/',             CraftDetailView.as_view(),    name='craft'),

@@ -5,18 +5,47 @@
 </style>
 
 {% block content %}
+
 <table border=1 width=100% cellspacing="0">
-  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ craft }}</td></tr>
+  <tr><td width=15%>编号：</td><td colspan=3><p align="left">{{ craftsheet }}</td></tr>
   <tr>
-    <td width=10%>1</td><td width=15%>2</td>
-    <td width=10%>3</td><td width=15%>4</td>
-    <td width=10%>5</td><td width=15%>6</td>
-    <td width=10%>7</td><td width=15%>8</td>
+    <td>设计日期：</td><td width=35%>{{ craftsheet.ddate }}</td>
+    <td>送厂日期：</td><td width=35%>{{ craftsheet.sdate }}</td>
   </tr>
-  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ craft.tag }}</td></tr>
+  <tr>
+    <td>预计完成日期：</td><td>{{ craftsheet.edate }}</td>
+    <td>实际完成日期：</td><td>{{ craftsheet.adate }}</td>
+  </tr>
+  <tr>
+    <td>制作方：</td><td>{{ craftsheet.producer }}</td>
+    <td>经手人：</td><td>{{ craftsheet.by }}</td>
+  </tr>
+  <tr><td>制作描述：</td><td colspan=3><p align="left">{{ craftsheet.desc }}</td></tr>
+  <tr><td>备注：</td><td colspan=3><p align="left">{{ craftsheet.tag }}</td></tr>
+</table>
+
+<table border=0 width=100% cellspacing="0">
+  <tr><td width=10%></td><td>
+{% for outbound in outbounds %}
+    <table border=1 width=100% cellspacing="0">
+      <tr><td width=10%>编号：</td><td colspan=5><p align="left">{{ outbound }}</td></tr>
+      <tr>
+        <td width=10%>售价：</td><td width=25%>{{ outbound.price }}</td>
+        <td width=10%>数量：</td><td width=25%>{{ outbound.quantity }}{{ outbound.store.inb.qunit }}</td>
+        <td width=10%>重制：</td><td width=20%>{{ outbound.get_recraft_display }}</td>
+      </tr>
+      <tr>
+        <td>出库日期：</td><td colspan=3>{{ outbound.date }}</td>
+        <td>经手人：</td><td>{{ outbound.by }}</td>
+      </tr>
+      <tr><td width=10%>备注：</td><td colspan=5><p align="left">{{ outbound.tag }}</td></tr>
+    </table>
+{% endfor %}
+  </td></tr>
 </table>
 
 <div class="modify">
   <a href="{% url 'amber:craft_list' %}" >返回</a>
 </div>
+
 {% endblock %}

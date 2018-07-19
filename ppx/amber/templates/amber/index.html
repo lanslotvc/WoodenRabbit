@@ -11,6 +11,12 @@
 </div>
 {% endif %}
 
+{% if is_group_designer or user.is_superuser %}
+<div>
+  <h2><a href="{% url 'amber:craft_list' %}" >生产单查看</a></h2>
+</div>
+{% endif %}
+
 {% if is_group_sales or is_group_designer or user.is_superuser %}
 <div>
   {% if pending_outbound %}

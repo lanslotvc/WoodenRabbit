@@ -202,9 +202,9 @@ class OutBound(models.Model):
     if self.type == 0:
       ret = '出库单_'
     elif self.type == 1:
-      ret = '销售单_'
+      ret = '出库销售单_'
     elif self.type == 2:
-      ret = '生产单_'
+      ret = '出库生产单_'
     return ret + str(self.id)
   def get_absolute_url(self):
     return reverse('amber:store', kwargs={'pk': self.store.pk})

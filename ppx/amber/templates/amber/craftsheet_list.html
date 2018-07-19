@@ -36,10 +36,27 @@
 <div class="results">
 <table>
     <tr>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">序号</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">订制日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">设计日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">送厂日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 5 %}-5{% else %}5{% endif %}">预计完成日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 6 %}-6{% else %}6{% endif %}">实际完成日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">制作方</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">操作</div><div class="clear"></div></th>
     </tr>
 {% for craft in object_list %}
     <tr>
       <td><a href="{% url 'amber:craft' craft.id %}">{{ craft }}</a></td>
+      <td>{{ craft.cdate }}</td>
+      <td>{{ craft.ddate }}</td>
+      <td>{{ craft.sdate }}</td>
+      <td>{{ craft.edate }}</td>
+      <td>{{ craft.adate }}</td>
+      <td>{{ craft.producer }}</td>
+      <td>{{ craft.by }}</td>
+      <td></td>
     </tr>
 {% empty %}
     <tr><td colspan=4>啥都没有？</td></tr>

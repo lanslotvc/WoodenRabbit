@@ -5,16 +5,24 @@
 </style>
 
 {% block content %}
-{% for craft in ol %}
+
+{% for craftsheet in ol %}
 <table border=1 width=100% cellspacing="0">
-  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ craft }}</td></tr>
+  <tr><td width=15%>编号：</td><td colspan=3><p align="left">{{ craftsheet }}</td></tr>
   <tr>
-    <td width=10%>1</td><td width=15%>2</td>
-    <td width=10%>3</td><td width=15%>4</td>
-    <td width=10%>5</td><td width=15%>6</td>
-    <td width=10%>7</td><td width=15%>8</td>
+    <td>设计日期：</td><td width=35%>{{ craftsheet.ddate }}</td>
+    <td>送厂日期：</td><td width=35%>{{ craftsheet.sdate }}</td>
   </tr>
-  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ craft.tag }}</td></tr>
+  <tr>
+    <td>预计完成日期：</td><td>{{ craftsheet.edate }}</td>
+    <td>实际完成日期：</td><td>{{ craftsheet.adate }}</td>
+  </tr>
+  <tr>
+    <td>制作方：</td><td>{{ craftsheet.producer }}</td>
+    <td>经手人：</td><td>{{ craftsheet.by }}</td>
+  </tr>
+  <tr><td>制作描述：</td><td colspan=3><p align="left">{{ craftsheet.desc }}</td></tr>
+  <tr><td>备注：</td><td colspan=3><p align="left">{{ craftsheet.tag }}</td></tr>
 </table>
 <br/>
 {% endfor %}

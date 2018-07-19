@@ -335,8 +335,14 @@ class CraftCreateView(PermissionRequiredMixin, CreateView):
     #stores = self.request.POST.getlist('stores_old') + self.request.POST.getlist('stores')
     obj = form.save(commit = False)
     obj.by = str(self.request.user)
-    obj.tag = self.request.GET.getlist('outbounds')
     obj.save()
+    
+    obs = self.request.GET.getlist('outbounds')
+    for o in obs:
+      ob = OutBound.objects.filter(id=o)[0]
+      ob.craft = obj
+      ob.type = 2
+      ob.save()
     return super(CraftCreateView, self).form_valid(form)
     
 class CraftDetailView(LoginRequiredMixin, DetailView):
@@ -385,7 +391,17 @@ class CraftListView(LoginRequiredMixin, ListView):
       order_by = int(order_by)
       order = abs(order_by)
       if (order == 1):
-        pass
+        ol = sorted(ol, key=lambda i: i.id)
+      elif (order == 2):
+        ol = sorted(ol, key=lambda i: i.cdate)
+      elif (order == 3):
+        ol = sorted(ol, key=lambda i: i.ddate)
+      elif (order == 4):
+        ol = sorted(ol, key=lambda i: i.sdate)
+      elif (order == 5):
+        ol = sorted(ol, key=lambda i: i.edate)
+      elif (order == 6):
+        ol = sorted(ol, key=lambda i: i.adate)
       if (order_by < 0):
         ol.reverse()
       context['order_by'] = order_by

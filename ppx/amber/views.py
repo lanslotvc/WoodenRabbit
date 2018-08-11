@@ -447,7 +447,10 @@ def print_stores(request):
   context = {}
   context['now'] = timezone.now()
   ll = str(request.GET.get('items')).split('_')
-  ll = [ int(x) for x in ll ]
+  try:
+    ll = [ int(x) for x in ll ]
+  except ValueError:
+    ll = []
   context['dummy'] = ll
   context['ol'] = Store.objects.filter(id__in=ll)
   context['can_viewbase'] = request.user.has_perm('amber.viewbase')
@@ -458,7 +461,10 @@ def print_stores_lite(request):
   context = {}
   context['now'] = timezone.now()
   ll = str(request.GET.get('items')).split('_')
-  ll = [ int(x) for x in ll ]
+  try:
+    ll = [ int(x) for x in ll ]
+  except ValueError:
+    ll = []
   context['ol'] = Store.objects.filter(id__in=ll)
   imgs = StoreImage.objects.all()
   all_imgs = [ x for x in imgs if x.store.id in ll ]
@@ -477,7 +483,10 @@ def print_crafts(request):
   context = {}
   context['now'] = timezone.now()
   ll = str(request.GET.get('items')).split('_')
-  ll = [ int(x) for x in ll ]
+  try:
+    ll = [ int(x) for x in ll ]
+  except ValueError:
+    ll = []
   context['dummy'] = ll
   context['ol'] = CraftSheet.objects.filter(id__in=ll)
   context['can_viewbase'] = request.user.has_perm('amber.viewbase')

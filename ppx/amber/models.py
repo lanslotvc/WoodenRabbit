@@ -93,7 +93,7 @@ class InBound(models.Model):
                   )
 
   kind_choice = ((0, '珍珠'), (1, '翡翠'), (2, '白玉'), (3, '彩宝'), (4, '钻石'), (5, '文玩'), (6, '素金'), (7, '古董珠宝'), (8, '瓷器'), (9, '裸链'), (999, '其他'))
-  type_choice = ((0, '成品'), (1, '原石'), (2, '裸链'), (3, 'K金配件'), (4, '客带'), (5, '手工配件'), (6, '配石'), (7, '配件'), (8, '其他配件'), (999, '其他'))
+  type_choice = ((0, '成品'), (1, '原石'), (2, '裸链'), (3, 'K金配件'), (4, '客供制作'), (5, '手工配件'), (6, '配石'), (7, '配件'), (8, '其他配件'), (9, '珍珠'), (10, '古董'), (999, '其他'))
   where_choice = ((0, '冬君'), (1, '店面'), (2, '设计师'), (3, '其他'))
   ktype_choice = ((0, '18K红'), (1, '18K黄'), (2, '18K白'), (3, 'PT950'), (4, 'PT900'), (5, 'PT850'), (6, '14K红'), (7, '14K黄')
                 , (8, '14K白'), (9, '10K黄'), (10, '10K白'), (11, '24K'), (12, '925银'), (999, '其他'), (9999, '不适用'))
@@ -105,10 +105,10 @@ class InBound(models.Model):
   
   quantity = models.IntegerField('数量', default=0)
   qunit = models.CharField('数量单位', max_length=16, blank=True, null=True)
-  weight = models.IntegerField('重量', default=0)
+  weight = models.FloatField('重量', default=0.0)
   wunit = models.CharField('重量单位', max_length=16, blank=True, null=True)
-  baseprice = models.IntegerField('单价', default=0)
-  saleprice = models.IntegerField('售价', default=0)
+  baseprice = models.IntegerField('单价', default=0, blank=True, null=True)
+  saleprice = models.IntegerField('售价', default=0, blank=True, null=True)
   tweight = models.IntegerField('总重', default=0)
   tprice = models.IntegerField('总价', default=0)
   

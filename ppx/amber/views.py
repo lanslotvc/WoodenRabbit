@@ -162,7 +162,7 @@ class StoreListView(LoginRequiredMixin, ListView):
     if (q):
       l = []
       for i in ol:
-        if (q in i.inb.name) or (q in i.inb) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
+        if (q in i.inb.name) or (i.inb.provider and q in i.inb.provider) or (q in i.inb.by) or (i.inb.tag and q in i.inb.tag) or (i.tag and q in i.tag):
           l.append(i)
       ol = l
       context['q'] = l

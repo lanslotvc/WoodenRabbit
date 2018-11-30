@@ -5,6 +5,7 @@
 </style>
 
 {% block content %}
+<table id="blob" width=100%><tr><td>
 {% for store in ol %}
 <table border=1 width=100% cellspacing="0">
   <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ store }}</td></tr>
@@ -52,9 +53,19 @@
     <td>供应商：</td><td colspan=2>{{ store.inb.provider }}</td>
     <td>经手人：</td><td>{{ store.inb.by }}</td>
   </tr>
-  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ store.inb.tag }} - {{ store.tag }}</td></tr>
+  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{% if store.inb.tag %} {{ store.inb.tag }} {% endif %} {% if store.tag %} - {{ store.tag }} {% endif %}</td></tr>
 </table>
 <br/>
 {% endfor %}
+</td></tr></table>
+
+<a id="download">导出表格</a>
+<script>
+  var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementById("blob").outerHTML + "</body></html>";
+  var blob = new Blob([html], { type: "application/vnd.ms-excel" });
+  var a = document.getElementById("download");
+  a.href = URL.createObjectURL(blob);
+  a.download = "库存明细.xls";
+</script>
 
 {% endblock %}

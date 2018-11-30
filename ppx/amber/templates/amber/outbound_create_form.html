@@ -14,7 +14,12 @@
         var quantity = f.quantity.value
         if (quantity > 0 && quantity <= {{ store.remains }}){
             //验证通过，提交表单数据
-            f.submit();
+            var ppl = f.people.value
+            if (ppl == 0) {
+              alert('卖给谁？');
+            } else {
+              f.submit();
+            }
         } else if (quantity > {{ store.remains }}) {
             alert('没剩辣么多了。。。');
         } else {

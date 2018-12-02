@@ -8,7 +8,7 @@
 <table id="blob" width=100%><tr><td>
 {% for store in ol %}
 <table border=1 width=100% cellspacing="0">
-  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ store }}</td></tr>
+  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ store.inb.seq }}</td></tr>
   <tr>
     <td width=10%>名称：</td><td width=15%>{{ store.inb.name }}</td>
     <td width=10%>类别：</td><td width=15%>{{ store.inb.get_kind_display }}</td>

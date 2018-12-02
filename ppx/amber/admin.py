@@ -15,12 +15,12 @@ class MemberAdmin(admin.ModelAdmin):
   date_hierarchy = 'join_date'   # 详细时间分层筛选
 
 class InBoundAdmin(admin.ModelAdmin):
-  list_display=('id', 'name', 'kind', 'type', 'where'
+  list_display=('id', 'seq', 'name', 'kind', 'type', 'where'
             , 'baseprice', 'saleprice', 'tag'
             )
-  list_editable = ['kind', 'type', 'where', 'baseprice', 'saleprice', 'tag']
+  list_editable = ['seq', 'kind', 'type', 'where', 'baseprice', 'saleprice', 'tag']
   list_filter =('kind', 'type', 'where') #过滤器
-  search_fields =('name', 'tag') #搜索字段
+  search_fields =('name', 'seq', 'tag') #搜索字段
   date_hierarchy = 'date'   # 详细时间分层筛选
 
 class OutBoundAdmin(admin.ModelAdmin):

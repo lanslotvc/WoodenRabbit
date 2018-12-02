@@ -136,8 +136,9 @@ class StoreListView(LoginRequiredMixin, ListView):
   def get_context_data(self, **kwargs):
     context = super(StoreListView, self).get_context_data(**kwargs)
     
-    context['ylist'] = list(set([ x.inb.date.year for x in context['object_list']]))
-    context['bylist'] = list(set([ x.inb.by for x in context['object_list']]))
+    
+    context['ylist'] = list(set([ x.inb.date.year for x in context['object_list'] if x.inb and x.inb.date]))
+    context['bylist'] = list(set([ x.inb.by for x in context['object_list'] if x.inb]))
     ol = context['object_list']
     date__year = self.request.GET.get('date__year')
     date__year = None if date__year == 'C' else date__year
@@ -260,7 +261,7 @@ class InBoundSheetView(PermissionRequiredMixin, DetailView):
 class InBoundCreateView(PermissionRequiredMixin, CreateView):
   model = InBound
   template_name_suffix = '_create_form'
-  fields = ['name', 'kind', 'type', 'where', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tprice', 'tweight'
+  fields = ['name', 'seq', 'kind', 'type', 'where', 'quantity', 'qunit', 'weight', 'wunit', 'baseprice', 'saleprice', 'tprice', 'tweight'
           , 'provider', 'length', 'diameter', 'ktype', 'tag']
   permission_required = 'amber.canin'
 

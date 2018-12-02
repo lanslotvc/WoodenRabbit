@@ -21,7 +21,7 @@
     </tr>
 {% for store in ol %}
     <tr>
-      <td>{{ store }}</td>
+      <td>{{ store.inb.seq }}</td>
       <td>
 {% for img in imgs %}
 {% if img.store.id == store.id %}

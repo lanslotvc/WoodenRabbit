@@ -9,6 +9,10 @@
 <div>
   <h2><a href="{% url 'amber:store_list' %}" >库存查看</a></h2>
 </div>
+
+<div>
+  <h2><a href="{% url 'amber:sell_list' %}" >销售查看</a></h2>
+</div>
 {% endif %}
 
 {% if is_group_designer or user.is_superuser %}

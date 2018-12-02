@@ -27,10 +27,10 @@ class OutBoundAdmin(admin.ModelAdmin):
   pass
 
 class StoreAdmin(admin.ModelAdmin):
-  pass
+  list_display=('id', 'inb', 'remains', 'status', 'tag')
   
 class StoreImageAdmin(admin.ModelAdmin):
-  pass
+  list_display=('store', 'image')
   
 class CraftSheetAdmin(admin.ModelAdmin):
   pass

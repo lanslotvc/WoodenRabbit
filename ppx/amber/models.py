@@ -131,7 +131,7 @@ class InBound(models.Model):
 class Store(models.Model):
   status_choice = ((0, '正常'), (1, '已出库'), (2, '找不到了>.<'))
   
-  inb = models.ForeignKey(InBound, models.SET_NULL, blank=True, null=True)
+  inb = models.ForeignKey(InBound, on_delete=models.CASCADE, blank=True, null=True)
   remains = models.IntegerField('剩余', default=0)
   status = models.IntegerField('状态', default=0, choices=status_choice)
   discount = models.IntegerField('折扣', default=100)
@@ -140,7 +140,7 @@ class Store(models.Model):
   tag = models.TextField('备注', blank=True, null=True)
   
   def __str__(self):
-    return '库存_' + str(self.inb.id) if self.inb else '库存_找不到入库单啊！'
+    return '库存_' + str(self.id) + '_' + str(self.inb.id) if self.inb else '库存_找不到入库单啊！'
   def final_price(self):
     price = self.inb.saleprice
     if (self.bestsale != 0):
@@ -150,7 +150,7 @@ class Store(models.Model):
     return price
 
 class StoreImage(models.Model):
-  store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
+  store = models.ForeignKey(Store, on_delete=models.CASCADE, blank=True, null=True)
   image = models.ImageField('照片', upload_to='upload/store', blank=True, null=True)
   
   def get_absolute_url(self):
@@ -182,7 +182,7 @@ class OutBound(models.Model):
   pay_choice = ((0, '现金'), (1, '信用卡'), (2, '支付宝'), (3, '微信'), (9, '其他'))
   rec_choice = ((0, '否'), (1, '是'))
   
-  store = models.ForeignKey(Store, models.SET_NULL, blank=True, null=True)
+  store = models.ForeignKey(Store, on_delete=models.CASCADE, blank=True, null=True)
   quantity = models.IntegerField('数量', default=0)
   date = models.DateField('出库日期', default=timezone.now)
   by = models.CharField('经手人', max_length=128)

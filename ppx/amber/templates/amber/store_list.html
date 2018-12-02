@@ -124,7 +124,8 @@
 <div class="results">
 <table>
     <tr>
-      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">编号</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">ID</a></div><div class="clear"></div></th>
+	  <th scope="col" class="sortable column-name"><div class="text">编号</div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">名称</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">类别</a></div><div class="clear"></div></th>
       <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 4 %}-4{% else %}4{% endif %}">库存类型</a></div><div class="clear"></div></th>
@@ -147,7 +148,8 @@
     </tr>
 {% for store in object_list %}
     <tr>
-      <td><a href="{% url 'amber:store' store.id %}">{{ store.inb.seq }}</a></td>
+      <td><a href="{% url 'amber:store' store.id %}">{{ store.id }}</a></td>
+	  <td>{{ store.inb.seq }}</td>
       <td>{{ store.inb.name  }}</td>
       <td>{{ store.inb.get_kind_display }}</td>
       <td>{{ store.inb.get_type_display }}</td>

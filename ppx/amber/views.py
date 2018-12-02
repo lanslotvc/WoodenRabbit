@@ -366,6 +366,7 @@ class CraftListView(LoginRequiredMixin, ListView):
 
     context['ylist'] = list(set([ x.cdate.year for x in context['object_list']]))
     context['bylist'] = list(set([ x.by for x in context['object_list']]))
+    context['prlist'] = list(set([ x.producer for x in context['object_list']]))
     ol = context['object_list']
     date__year = self.request.GET.get('date__year')
     date__year = None if date__year == 'C' else date__year
@@ -373,6 +374,8 @@ class CraftListView(LoginRequiredMixin, ListView):
     date__month = None if date__month == 'C' else date__month
     by = self.request.GET.get('by')
     by = None if by == 'C' else by
+    pr = self.request.GET.get('pr')
+    pr = None if pr == 'C' else pr
     order_by = self.request.GET.get('o')
     q = self.request.GET.get('q')
     context['get_str'] = ''
@@ -387,6 +390,14 @@ class CraftListView(LoginRequiredMixin, ListView):
       ol = [ x for x in ol if x.cdate.month == int(date__month) ]
       context['get_str'] += ('&date__month=' + date__month)
       context['m'] = int(date__month)
+    if (by):
+      ol = [ x for x in ol if x.by == by ]
+      context['get_str'] += ('&by=' + by)
+      context['b'] = by
+    if (pr):
+      ol = [ x for x in ol if x.producer == pr ]
+      context['get_str'] += ('&pr=' + pr)
+      context['p'] = pr
     # order
     if (order_by):
       order_by = int(order_by)
@@ -412,6 +423,79 @@ class CraftListView(LoginRequiredMixin, ListView):
     context['can_out'] = self.request.user.has_perm('amber.canout')
     context['now'] = timezone.now()
     context['dummy'] = '导出到csv'
+    return context
+	
+class SellDetailView(LoginRequiredMixin, DetailView):
+  model = OutBound
+  def get_context_data(self, **kwargs):
+    context = super(SellDetailView, self).get_context_data(**kwargs)
+    outbound = context['outbound']
+    context['outbounds'] = OutBound.objects.filter(id=outbound.id)
+    context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
+    context['now'] = timezone.now()
+    return context
+
+class SellListView(LoginRequiredMixin, ListView):
+  model = OutBound
+
+  def get_context_data(self, **kwargs):
+    context = super(SellListView, self).get_context_data(**kwargs)
+
+    context['ylist'] = list(set([ x.date.year for x in context['object_list']]))
+    context['bylist'] = list(set([ x.by for x in context['object_list']]))
+    context['tolist'] = list(set([ x.people for x in context['object_list']]))
+    ol = [x for x in context['object_list'] if x.type == 1]
+    date__year = self.request.GET.get('date__year')
+    date__year = None if date__year == 'C' else date__year
+    date__month = self.request.GET.get('date__month')
+    date__month = None if date__month == 'C' else date__month
+    by = self.request.GET.get('by')
+    by = None if by == 'C' else by
+    to = self.request.GET.get('to')
+    to = None if to == 'C' else to
+    order_by = self.request.GET.get('o')
+    q = self.request.GET.get('q')
+    context['get_str'] = ''
+    # query
+
+    # filter
+    if (date__year):
+      ol = [ x for x in ol if x.date.year == int(date__year) ]
+      context['get_str'] += ('&date__year=' + date__year)
+      context['y'] = int(date__year)
+    if (date__month):
+      ol = [ x for x in ol if x.date.month == int(date__month) ]
+      context['get_str'] += ('&date__month=' + date__month)
+      context['m'] = int(date__month)
+    if (by):
+      ol = [ x for x in ol if x.by == by ]
+      context['get_str'] += ('&by=' + by)
+      context['b'] = by
+    if (to):
+      ol = [ x for x in ol if x.people == to ]
+      context['get_str'] += ('&to=' + to)
+      context['t'] = to
+    # order
+    if (order_by):
+      order_by = int(order_by)
+      order = abs(order_by)
+      if (order == 1):
+        ol = sorted(ol, key=lambda i: i.id)
+      elif (order == 2):
+        ol = sorted(ol, key=lambda i: i.date)
+      elif (order == 3):
+        ol = sorted(ol, key=lambda i: i.price)
+      if (order_by < 0):
+        ol.reverse()
+      context['order_by'] = order_by
+    context['object_list'] = ol
+    context['can_in'] = self.request.user.has_perm('amber.canin')
+    context['can_viewbase'] = self.request.user.has_perm('amber.viewbase')
+    context['can_out'] = self.request.user.has_perm('amber.canout')
+    context['now'] = timezone.now()
+    context['dummy'] = ''
     return context
 
 # Create your views here.
@@ -492,3 +576,17 @@ def print_crafts(request):
   context['ol'] = CraftSheet.objects.filter(id__in=ll)
   context['can_viewbase'] = request.user.has_perm('amber.viewbase')
   return render(request, 'amber/print_crafts.html', context)
+  
+@login_required()
+def print_sells(request):
+  context = {}
+  context['now'] = timezone.now()
+  ll = str(request.GET.get('items')).split('_')
+  try:
+    ll = [ int(x) for x in ll ]
+  except ValueError:
+    ll = []
+  context['dummy'] = ll
+  context['ol'] = OutBound.objects.filter(id__in=ll)
+  context['can_viewbase'] = request.user.has_perm('amber.viewbase')
+  return render(request, 'amber/print_sells.html', context)

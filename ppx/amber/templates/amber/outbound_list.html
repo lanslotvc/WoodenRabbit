@@ -1,0 +1,96 @@
+﻿{% extends "amber/base.html" %}
+
+{% block content %}
+<h3>销售单 = {{ now }} -- {{ dummy }}</h3>
+
+<div id="toolbar">
+  <form id="changelist-search" method="get">
+    <div><!-- DIV needed for valid HTML -->
+      <label for="searchbar"><img src="/static/admin/img/search.svg" alt="Search" /></label>
+      <input type="text" size="40" name="q" value="" id="searchbar" autofocus />
+      <input type="submit" value="搜索" />
+      {% if q %}<a href="?">全部</a>{% endif %}
+    </div>
+  </form>
+</div>
+
+<div class="xfull">
+  <ul class="toplinks">
+    <li>销售日期</li>
+  {% for year in ylist %}
+    <li><a href="?date__year={{ year }}">{% if y == year %} > {% endif %} {{ year }} {% if y == year %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?date__year=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>销售月份</li>
+    <li><a href="?date__month=1">{% if m == 1 %} > {% endif %} 1 {% if m == 1 %} < {% endif %}</a></li>
+    <li><a href="?date__month=2">{% if m == 2 %} > {% endif %} 2 {% if m == 2 %} < {% endif %}</a></li>
+    <li><a href="?date__month=4">{% if m == 3 %} > {% endif %} 3 {% if m == 3 %} < {% endif %}</a></li>
+    <li><a href="?date__month=4">{% if m == 4 %} > {% endif %} 4 {% if m == 4 %} < {% endif %}</a></li>
+    <li><a href="?date__month=5">{% if m == 5 %} > {% endif %} 5 {% if m == 5 %} < {% endif %}</a></li>
+    <li><a href="?date__month=6">{% if m == 6 %} > {% endif %} 6 {% if m == 6 %} < {% endif %}</a></li>
+    <li><a href="?date__month=7">{% if m == 7 %} > {% endif %} 7 {% if m == 7 %} < {% endif %}</a></li>
+    <li><a href="?date__month=8">{% if m == 8 %} > {% endif %} 8 {% if m == 8 %} < {% endif %}</a></li>
+    <li><a href="?date__month=9">{% if m == 9 %} > {% endif %} 9 {% if m == 9 %} < {% endif %}</a></li>
+    <li><a href="?date__month=10">{% if m == 10 %} > {% endif %} 10 {% if m == 10 %} < {% endif %}</a></li>
+    <li><a href="?date__month=11">{% if m == 11 %} > {% endif %} 11 {% if m == 11 %} < {% endif %}</a></li>
+    <li><a href="?date__month=12">{% if m == 12 %} > {% endif %} 12 {% if m == 12 %} < {% endif %}</a></li>
+    <li><a href="?date__month=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>经手人</li>
+  {% for by in bylist %}
+    <li><a href="?by={{ by }}">{% if b == by %} > {% endif %} {{ by }} {% if b == by %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?by=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+<div class="xfull">
+  <ul class="toplinks">
+    <li>客户</li>
+  {% for to in tolist %}
+    <li><a href="?to={{ to }}">{% if t == to %} > {% endif %} {{ to }} {% if t == to %} < {% endif %}</a></li>
+  {% endfor %}
+    <li><a href="?to=C">全部</a></li>
+  </ul><br class="clear" />
+</div>
+
+<div class="results">
+<table>
+    <tr>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 1 %}-1{% else %}1{% endif %}">序号</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 2 %}-2{% else %}2{% endif %}">日期</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text"><a href="?{{ get_str }}&o={% if order_by == 3 %}-3{% else %}3{% endif %}">售价</a></div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">经手人</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">客户</div><div class="clear"></div></th>
+      <th scope="col" class="sortable column-name"><div class="text">操作</div><div class="clear"></div></th>
+    </tr>
+{% for sell in object_list %}
+    <tr>
+      <td><a href="{% url 'amber:sell' sell.id %}">{{ sell }}</a></td>
+      <td>{{ sell.date }}</td>
+      <td>{{ sell.price }}</td>
+      <td>{{ sell.producer }}</td>
+      <td>{{ sell.by }}</td>
+      <td></td>
+    </tr>
+{% empty %}
+    <tr><td colspan=4>啥都没有？</td></tr>
+{% endfor %}
+</table>
+</div>
+
+
+<div class="modify">
+  <span><a href="{% url 'amber:print_sell_list' %}?items={% for sell in object_list %}{{ sell.id }}{% if not forloop.last %}_{% endif %}{% endfor %}" target="_blank">打印当前</a></span>
+</div>
+{% endblock %}
+
+
+
+

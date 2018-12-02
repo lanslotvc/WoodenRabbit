@@ -1,0 +1,28 @@
+﻿{% extends "amber/base_nh.html" %}
+
+<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
+{% block content %}
+
+<table border=1 width=100% cellspacing="0">
+  <tr><td width=10%>编号：</td><td></td><td colspan=6><p align="left">{{ outbound }}</td></tr>
+  <tr>
+    <td width=10%>付款方式：</td><td width=15%>{{ outbound.get_payment_display }}</td>
+    <td width=10%>售价：</td><td width=15%>{{ outbound.price }}</td>
+    <td width=10%>数量：</td><td width=15%>{{ outbound.quantity }}{{ outbound.store.inb.qunit }}</td>
+    <td width=10%>重制：</td><td width=15%>{{ outbound.get_recraft_display }}</td>
+  </tr>
+  <tr>
+    <td>出库日期：</td><td colspan=2>{{ outbound.date }}</td>
+    <td>客户名：</td><td colspan=2>{{ outbound.people }}</td>
+    <td>经手人：</td><td>{{ outbound.by }}</td>
+  </tr>
+  <tr><td width=10%>备注：</td><td colspan=7><p align="left">{{ outbound.tag }}</td></tr>
+</table>
+
+<div class="modify">
+  <a href="{% url 'amber:sell_list' %}" >返回</a>
+</div>
+{% endblock %}

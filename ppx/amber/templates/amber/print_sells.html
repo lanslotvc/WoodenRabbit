@@ -1,0 +1,36 @@
+﻿{% extends "amber/base_nh.html" %}
+
+<style>
+  table { width: 1000px; min-height: 25px; line-height: 25px; text-align: center; border-color:#ffffff; border-collapse: collapse;}   
+</style>
+
+{% block content %}
+<table id="blob" width=100%><tr><td>
+{% for sell in ol %}
+<table border=1 width=100% cellspacing="0">
+  <tr><td width=15%>编号：</td><td colspan=3><p align="left">{{ sell }}</td></tr>
+  <tr><td width=15%>名称：</td><td colspan=3><p align="left">{{ sell.store.inb.name }}</td></tr>
+  <tr>
+    <td>销售日期：</td><td width=35%>{{ sell.date }}</td>
+    <td>售价：</td><td width=35%>{{ sell.price }}</td>
+  </tr>
+  <tr>
+    <td>客户：</td><td>{{ sell.people }}</td>
+    <td>经手人：</td><td>{{ sell.by }}</td>
+  </tr>
+  <tr><td>备注：</td><td colspan=3><p align="left">{{ craftsheet.tag }}</td></tr>
+</table>
+<br/>
+{% endfor %}
+</td></tr></table>
+
+<a id="download">导出表格</a>
+<script>
+  var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementById("blob").outerHTML + "</body></html>";
+  var blob = new Blob([html], { type: "application/vnd.ms-excel" });
+  var a = document.getElementById("download");
+  a.href = URL.createObjectURL(blob);
+  a.download = "销售.xls";
+</script>
+
+{% endblock %}
